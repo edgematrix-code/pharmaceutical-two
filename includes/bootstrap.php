@@ -6,13 +6,22 @@ declare(strict_types=1);
  * page. No framework, no output.
  */
 
+// Read .env first: the runtime flags below and every value in config.php are
+// read with getenv(). See includes/env.php.
+require_once __DIR__ . '/env.php';
+arail_load_env();
+
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/seo.php';
 require_once __DIR__ . '/catalog.php';
 
+// Security headers + CSP. They cannot live in .htaccess: nginx ignores it and
+// phpix (Wasmer Edge) refuses the `Header` directive outright. See helpers.php.
+arail_send_security_headers();
+
 // Production-safe error handling: never display errors to visitors.
-if ((getenv('ARAIL_DEBUG') ?: '') !== '1') {
+if ((getenv('APP_DEBUG') ?: '') !== '1') {
     ini_set('display_errors', '0');
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_WARNING);
 }

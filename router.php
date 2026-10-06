@@ -19,9 +19,16 @@ if (preg_match('~^/router\.php$~i', $uri)) {
     exit('Forbidden');
 }
 
+// Dotfiles (".env", ".git", ...) must never be served as static files: hand
+// them to the front controller, which answers 403 exactly like the live
+// server. ".well-known" is left alone so TLS/ACME challenges keep working.
+$isDotfile = str_starts_with($uri, '/.')
+    && !str_starts_with($uri, '/.well-known/')
+    && $uri !== '/.well-known';
+
 // Serve real files/directories exactly as stored.
 $candidate = __DIR__ . '/' . ltrim(rawurldecode($uri), '/');
-if ($uri !== '/' && (is_file($candidate) || is_dir($candidate))) {
+if ($uri !== '/' && !$isDotfile && (is_file($candidate) || is_dir($candidate))) {
     return false;
 }
 

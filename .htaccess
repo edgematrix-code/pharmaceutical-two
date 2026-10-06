@@ -1,114 +1,44 @@
 # ---------------------------------------------------------------------------
-# Arail Pharmaceuticals - Apache configuration
+# Arail Pharmaceuticals - web server rules
 #
-# IMPORTANT: no domain is hard-coded here. Replace ONLY_DOMAIN below with your
-# real domain once it has been purchased, or delete the canonical-host block.
+# KEEP THIS FILE SMALL. It is read by Apache *and* by phpix, the PHP runtime
+# Wasmer Edge uses for this app. phpix parses .htaccess itself and implements
+# only a small subset: the moment it meets a directive it does not know, it
+# answers EVERY request with
+#
+#     500  Htaccess evaluation failed
+#
+# which is exactly what `Header always set ...`, `Options`, `DirectoryIndex`,
+# `ErrorDocument`, `<IfModule>` and the compression/caching blocks used to do
+# (phpix log: "Unsupported header action", line 61, column 12 = "always").
+#
+# Everything that is not a rewrite therefore lives in PHP, where it works on
+# Herd/nginx, Apache, phpix and `php -S` alike:
+#
+#    clean URLs / routing      index.php + includes/routes.php
+#    dotfiles, db/, tools/     index.php section 2  -> 403, plus phpix's own
+#                              "Direct access forbidden" for any path that
+#                              starts with a dot. A plain Apache host should
+#                              add the <FilesMatch "^\."> deny block back -
+#                              see CHANGELOG.md (phpix rejects it).
+#    legacy .html -> clean     includes/routes.php ('legacy')
+#    .php / index.php strip    index.php
+#    404                       index.php -> 404.php
+#    security headers + CSP    includes/helpers.php: arail_send_security_headers()
+#    https                     Herd/nginx 301 + Wasmer Edge gateway force_https
+#    gzip/brotli, caching      the hosting platform
+#
+# On a plain Apache host you may add compression/caching/HTTPS rules back, but
+# check them against phpix first: one unsupported directive takes the whole
+# site down.
 # ---------------------------------------------------------------------------
 
-Options -Indexes
-DirectoryIndex index.php index.html
+RewriteEngine On
 
-<IfModule mod_rewrite.c>
-    RewriteEngine On
+# Leave real files and directories alone (assets/, admin/, api/, robots.php,
+# sitemap.php, feed.php, 404.php ...).
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 
-    # ---- 1. Force HTTPS -----------------------------------------------------
-    RewriteCond %{HTTPS} !=on
-    RewriteCond %{HTTP:X-Forwarded-Proto} !https
-    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-
-    # ---- 2. One canonical host (uncomment + set your real domain) -----------
-    # RewriteCond %{HTTP_HOST} !^ONLY_DOMAIN$ [NC]
-    # RewriteRule ^ https://ONLY_DOMAIN%{REQUEST_URI} [R=301,L]
-
-    # ---- 3. Strip legacy .php extensions and index.php duplicates ----------
-    RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
-    RewriteRule ^ /%1/ [R=301,L]
-    RewriteCond %{THE_REQUEST} \s/+(.+?)index\.php[\s?] [NC]
-    RewriteRule ^ /%1 [R=301,L]
-
-    # ---- 3b. Legacy static-mirror URLs -> 301 to the clean URL -------------
-    RewriteRule ^index\.html$ / [R=301,L,NC]
-    RewriteRule ^Shop\.html$ /shop/ [R=301,L,NC]
-    RewriteRule ^stacks\.html$ /stacks/ [R=301,L,NC]
-    RewriteRule ^dosing\.html$ /dosing/ [R=301,L,NC]
-    RewriteRule ^review\.html$ /reviews/ [R=301,L,NC]
-    RewriteRule ^bitcoin\.html$ /bitcoin/ [R=301,L,NC]
-    RewriteRule ^Contact\.html$ /contact/ [R=301,L,NC]
-    RewriteRule ^Testing\.html$ /testing/ [R=301,L,NC]
-
-    # ---- 3c. Block non-public paths ---------------------------------------
-    # Legacy mirror backups still contain references to the unpurchased domain,
-    # and db/tools/router are server-side only.
-    RewriteRule ^(\.backup-html|\.work|db|tools)(/|$) - [F]
-    RewriteRule ^(router|seo-check)\.php$ - [F]
-
-    # Never rewrite real files or directories (assets, api, admin, robots.php…)
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [L]
-
-    # ---- 4. Front controller ------------------------------------------------
-    # One router for every server: index.php consults includes/routes.php, so
-    # nginx, Apache and `php -S` all resolve URLs through the same code.
-    RewriteRule ^ index.php [L,QSA]
-</IfModule>
-
-# ---- 5. Real 404 / 410 (no soft 404s) --------------------------------------
-ErrorDocument 404 /404.php
-
-# ---- 6. Security headers ---------------------------------------------------
-<IfModule mod_headers.c>
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
-    # HSTS - enable only after HTTPS is verified end to end.
-    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-
-    # Content-Security-Policy. 'unsafe-inline' is required only while the inline
-    # critical-CSS/age-gate snippets remain; tighten once externalised.
-    # googletagmanager / google-analytics are listed so GA4 keeps working once
-    # you set app.ga4_id. Remove them if you never enable analytics.
-    Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
-</IfModule>
-
-# ---- 7. Compression --------------------------------------------------------
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml application/javascript application/json image/svg+xml
-</IfModule>
-<IfModule mod_brotli.c>
-    AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript application/json image/svg+xml
-</IfModule>
-
-# ---- 8. Caching ------------------------------------------------------------
-<IfModule mod_expires.c>
-    ExpiresActive On
-    # Versioned/static assets: one year, immutable.
-    ExpiresByType text/css                "access plus 1 year"
-    ExpiresByType application/javascript  "access plus 1 year"
-    ExpiresByType image/png               "access plus 1 year"
-    ExpiresByType image/jpeg              "access plus 1 year"
-    ExpiresByType image/webp              "access plus 1 year"
-    ExpiresByType image/svg+xml           "access plus 1 year"
-    ExpiresByType font/woff2              "access plus 1 year"
-    # HTML should revalidate so price/stock changes appear immediately.
-    ExpiresByType text/html               "access plus 0 seconds"
-</IfModule>
-<IfModule mod_headers.c>
-    <FilesMatch "\.(css|js|woff2|png|jpe?g|webp|svg|avif)$">
-        Header set Cache-Control "public, max-age=31536000, immutable"
-    </FilesMatch>
-    <FilesMatch "\.(php|html)$">
-        Header set Cache-Control "no-cache, must-revalidate"
-    </FilesMatch>
-</IfModule>
-
-# ---- 9. Protect sensitive files -------------------------------------------
-<FilesMatch "^(config\.php|seed\.php|migrate\.php|enrich\.php|schema\.php|seo-check\.php)$">
-    Require all denied
-</FilesMatch>
-
-<IfModule mod_headers.c>
-    # Correct MIME type for WOFF2 on older Apache builds.
-    AddType font/woff2 .woff2
-</IfModule>
+# Everything else is resolved by the front controller.
+RewriteRule ^ index.php [QSA,L]

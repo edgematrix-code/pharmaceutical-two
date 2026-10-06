@@ -5,8 +5,8 @@ work that is deliberately left for the store owner.
 
 **Important:** the production domain has **not** been purchased. No domain name is
 hard-coded anywhere in the codebase any more — every absolute URL (canonical,
-Open Graph, sitemap, Merchant Center feed) is generated from `app.base_url` in
-`includes/config.php`, which is intentionally empty until the real domain exists.
+Open Graph, sitemap, Merchant Center feed) is generated from `APP_BASE_URL` in
+`.env`, which is intentionally empty until the real domain exists.
 
 ---
 
@@ -291,8 +291,9 @@ CLS < 0.1 ✅ 0. Mobile home and the image-heavy testing page are still above th
 - Honeypot field on the contact form and the review form.
 - `display_errors` off in production (`includes/bootstrap.php`).
 - `install.php` is now **disabled for anonymous HTTP** (returns 403) and requires
-  CLI or `ARAIL_ALLOW_INSTALL=1`; `config.php`, `seed.php`, `migrate.php` and
-  `seo-check.php` are denied by `.htaccess`.
+  CLI or `APP_ALLOW_INSTALL=1`; `config.php`, `seed.php`, `migrate.php` and
+  `seo-check.php` are denied by `.htaccess` (and now every dotfile too, `.env`
+  included — see *Configuration moved into an environment file*).
 
 ---
 
@@ -791,6 +792,194 @@ file *and* loading, and every colour/radius token measured with
 
 ---
 
+## Configuration moved into an environment file
+
+Every setting now comes from a single `.env` file in the project root and is read
+with `getenv()` — nothing else has to be edited to configure the site.
+
+- **New loader `includes/env.php`** (dependency-free: no Composer, no framework).
+  It parses `.env` once per request and publishes each entry to `getenv()`,
+  `$_ENV` and `$_SERVER`. It handles comments, blank lines, an `export` prefix,
+  and single/double-quoted values (with `\n \r \t \" \\` unescaped); nothing is
+expanded, so a literal `$` stays a `$`. A **real environment variable of the
+  same name always wins over the file**, so one-off overrides keep working:
+  `APP_DEBUG=1 php install.php`.
+- **`includes/config.php` reads everything with `getenv()`.** The database
+  connection uses exactly the requested names:
+
+  ```
+  DB_HOST   DB_PORT   DB_USERNAME   DB_PASSWORD   DB_NAME
+  ```
+
+  (replacing the old `ARAIL_DB_HOST` / `ARAIL_DB_PORT` / `ARAIL_DB_NAME` /
+  `ARAIL_DB_USER` / `ARAIL_DB_PASS`). The rest of the configuration is exposed
+  too, under `APP_*` / `ADMIN_*`: name, tagline, support email, phone, address,
+  currency + code, country, flat shipping, **minimum order (300)**, uploads URL
+  and directory, max upload size, base URL, GA4/GSC placeholders, and the
+  installer defaults. `ARAIL_DEBUG` / `ARAIL_ALLOW_INSTALL` became `APP_DEBUG` /
+  `APP_ALLOW_INSTALL`. The **keys inside config.php are unchanged**, so no call
+  site and no template had to change.
+- **`.env`** holds the live values and **`.env.example`** is the annotated,
+  secret-free template to copy onto a new machine. A new **`.gitignore`** keeps
+  `.env` out of version control.
+- The loader is started **before anything reads a value**: from `includes/config.php`
+  itself (which every consumer goes through) and from `includes/bootstrap.php` /
+  `install.php`, which read flags directly.
+- Because PHP-FPM reuses worker processes — and Herd serves every site from the
+  same pool on `127.0.0.1:9085` — the published variables are **removed again at
+  the end of the request**, so one site's `.env` cannot leak into another.
+- `install.php`'s failure hint and the config header comment now point at `.env`.
+- **Deployment note:** on Apache the repo's `.htaccess` protects `.env`. A real
+  nginx host ignores `.htaccess`, so add `location ~ /\.(?!well-known) { deny all; }`
+  to the server block. Herd's own config is machine-generated, which is why the
+  local fix lives in `LocalValetDriver.php` instead.
+
+### A stray `.env` would have been publicly downloadable
+
+Herd/nginx (`resources/valet/server.php`) returns **any file that exists on
+disk**, including dotfiles, and its only deny rule covers `.ht*` — so a plain
+`.env` in the web root was readable over HTTP (proved with a temporary
+`.dotfile-probe` file that came back `200` with its contents). It is now blocked
+at three layers:
+
+- **`LocalValetDriver.php`** (new): a Valet/Herd site driver that refuses to treat
+  dotfiles as static files and routes them to `index.php`, which answers `403`.
+  This is the layer that matters on this machine.
+- **`index.php`** now refuses every dot-prefixed path (`.well-known` excepted) and
+  `LocalValetDriver.php` itself — the driver is already `require_once`d by
+  `server.php`, so letting it also run as a page was a fatal "cannot redeclare
+  class". **`router.php`** (`php -S`) applies the same rule, so the built-in
+  server behaves like the live one.
+- **`.htaccess`** (for Apache) now denies every dotfile plus the server-side
+  scripts, replacing the shorter `FilesMatch` list.
+- **`seo-check.php`** gained a live probe: `/.env`, `/.env.example` and
+  `/.git/config` are fetched and any `200` is reported as an error.
+
+Verified:
+
+- `php -l` clean on every changed/new PHP file.
+- CLI: `getenv()` returns `DB_HOST` / `DB_PORT` / `DB_USERNAME` /
+  `DB_PASSWORD` / `DB_NAME`, and the config resolves them to `127.0.0.1` /
+  `3306` / `root` / `arail`. `db()` connects — **50 products, 3 categories,
+  4 orders, 1 admin user**, matching the baseline — and `app.min_order` comes
+  back as a float `300` while `max_upload_mb` is an int `3`.
+- `.env` parsing checked for double quotes, a single-quoted `#`, trailing
+  comments, an empty value, `export`, and a literal `$`.
+- A real environment variable overrides the file (`DB_HOST=from-shell` wins).
+- A missing `.env` falls back to the defaults without an error and still
+  connects.
+- HTTP on `https://arail-pharamceuticals.test`: `/.env`, `/.env.example`,
+  `/.gitignore`, `/.git/config`, `/.htaccess` and `/LocalValetDriver.php` all
+  return **403** with no secret in the body, while `/`, `/shop/`, `/cart/`,
+  `/checkout/`, `/admin/login.php`, `/robots.txt`, `/sitemap.xml` and
+  `/feed.php` all return **200**.
+- `php -S 127.0.0.1:8123 router.php`: `/.env` → 403, pages → 200.
+- Request-scoped cleanup confirmed: the values are visible during the request
+  and `getenv('DB_HOST')` is `false` again once it ends.
+- `check-min-order.mjs` **30/30**, `check-admin-theme.mjs` **85/85**, and
+  `seo-check.php` **0 errors, 1 warning** (the intentional empty `APP_BASE_URL`),
+  exit 0. The single order the min-order suite creates was deleted, the database
+  is back to its baseline counts, and orders 1, 15, 16 and 35 are untouched.
+
+---
+
+---
+
+## Wasmer Edge: "500 Htaccess evaluation failed"
+
+The deployment at `https://arailpharmaceutical.wasmer.app/` answered **every**
+request — `/`, `/shop/`, `/assets/css/site.css`, even 404s — with
+
+```
+HTTP/1.1 500 Internal Server Error
+x-phpix-version: 0.3.0-rc.5
+
+Htaccess evaluation failed
+```
+
+### Cause
+
+Wasmer Edge runs this app on **phpix** (`phpix: true`, PHP 8.3, anybuild provider
+`php`), a PHP runtime that **parses `.htaccess` itself** and implements only a
+small subset of it. The `.htaccess` was written for Apache: `Options`,
+`DirectoryIndex`, `ErrorDocument`, `<IfModule>` blocks, compression, caching and
+— the fatal one — security headers written as `Header always set …`. phpix stops
+at the first directive it does not implement and fails the whole request. The
+runtime's own log named the exact position:
+
+```
+ERROR phpix::server::htaccess: htaccess evaluation failed request_path=/
+  error=Parse(ParseError { message: "Unsupported header action",
+    span: Span { start: Position { offset: 2651, line: 61, column: 12 },
+                 end:   Position { offset: 2657, line: 61, column: 18 } } })
+```
+
+Line 61, column 12–18 of the deployed file is `always` in
+`    Header always set X-Content-Type-Options "nosniff"`: phpix takes the word
+after `Header` as the action and only knows its own set.
+
+### What changed
+
+- **`.htaccess` is back, in the minimal rewrite-only form phpix provably
+  accepts** — the same four lines the working sibling app
+  `nexuspharmacy.wasmer.app` runs:
+
+  ```
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [QSA,L]
+  ```
+
+  Everything else it used to do was either already handled by the front
+  controller (dotfiles / `db/` / `tools/` → 403, the legacy `.html` 301s, the
+  `.php` and `index.php` stripping, the 404 page) or is the hosting platform's
+  job (HTTPS: Herd's 301 and Wasmer's `force_https`; gzip/brotli and caching).
+- **The security headers moved into PHP, where they actually run on every host:**
+  `arail_send_security_headers()` in `includes/helpers.php`, called from
+  `includes/bootstrap.php`. The five headers are byte-for-byte the ones from the
+  old `.htaccess` (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`,
+  `Permissions-Policy`, CSP). This exposed a second, silent problem: Herd/nginx
+  never read `.htaccess`, so **none of those headers were being sent** — `curl -I`
+  showed none before the change and all five after.
+- The `.htaccess` the user deleted from the project root (it was still in the
+  Recycle Bin) is restored in the new minimal form, so the repository is complete
+  again.
+
+Verified:
+
+- `php -l` clean on `includes/helpers.php` and `includes/bootstrap.php`.
+- Local nginx: all 24 public URLs return **200**; `/.env`, `/.env.example`,
+  `/.gitignore`, `/.htaccess`, `/LocalValetDriver.php`, `/db/schema.php` and
+  `/tools/optimize-images.php` return **403**.
+- **`check-csp.mjs`** (new harness): 16 pages, **0 CSP violations**, all five
+  headers present on every page.
+- `check-min-order.mjs` **30/30**, `check-cart-checkout.mjs` **51/51**,
+  `check-admin-theme.mjs` **85/85** — the CSP does not break a single inline
+  script or the admin panel.
+- `seo-check.php`: **0 errors, 1 warning** (the usual empty `APP_BASE_URL`), and
+  its secret probes report `403 /.env blocked`.
+- The transient orders the browser suites create were deleted again; orders 1,
+  15, 16 and 35 are untouched and the counts match the baseline.
+
+### On a real Apache host
+
+`.htaccess` no longer denies dotfiles or the server-side scripts, because phpix
+rejects that directive. On Apache only, add back:
+
+```
+<FilesMatch "(^\.|^(config|seed|migrate|enrich|schema|seo-check)\.php$)">
+    Require all denied
+</FilesMatch>
+```
+
+The hosts actually in use are covered without it: Herd/nginx goes through
+`LocalValetDriver.php` + `index.php` (section 2), and phpix answers
+`Direct access forbidden` for any path starting with a dot — the same answer the
+sibling app returns for its own `.htaccess`.
+
+---
+
 ## Verification performed
 
 - `php -l` on **all** PHP files — clean.
@@ -826,9 +1015,9 @@ file *and* loading, and every colour/radius token measured with
 
 ## Not done / left for you
 
-1. **`app.base_url` is unset** because the domain isn't purchased. Set it (or
-   `ARAIL_BASE_URL`) before launch — until then canonicals/sitemaps/feed follow the
-   request host, which is fine locally but wrong in production.
+1. **`APP_BASE_URL` is unset** because the domain isn't purchased. Set it in
+   `.env` before launch — until then canonicals/sitemaps/feed follow the request
+   host, which is fine locally but wrong in production.
 2. **Product descriptions are thin**: 48 of 50 products have a one-line
    description. `docs/content-todo.txt` lists every product that needs 150–300
    words of original copy. Nothing was invented to pad them.
@@ -857,7 +1046,7 @@ file *and* loading, and every colour/radius token measured with
    present and checked because the reference has it, but there is no billing
    address form behind it in the capture either.
 11. The **$300 minimum order** is enforced on the merchandise subtotal, and the
-   threshold lives in one place (`app.min_order` in `includes/config.php`). If
+   threshold lives in one place (`APP_MIN_ORDER` in `.env`). If
    you sell a cheap accessory you want exempt, that product-level exception does
    not exist yet — tell me the rule and I'll add it.
 12. **The admin's colour tokens are a copy, not a shared file.**
@@ -876,8 +1065,8 @@ file *and* loading, and every colour/radius token measured with
 
 ## Manual checklist for you
 
-- [ ] Buy the domain, then set `app.base_url` in `includes/config.php` (or
-      `ARAIL_BASE_URL`) and re-run `php seo-check.php`.
+- [ ] Buy the domain, then set `APP_BASE_URL` in `.env` and re-run
+      `php seo-check.php`.
 - [ ] Uncomment the canonical-host rule in `.htaccess` and set your real domain.
 - [ ] Enable HSTS in `.htaccess` once HTTPS is verified.
 - [ ] Delete `install.php` (or keep it CLI-only) — it is already HTTP-disabled.
@@ -889,4 +1078,4 @@ file *and* loading, and every colour/radius token measured with
 - [ ] Collect real customer reviews (they are the only source of ratings).
 - [ ] Build backlinks (supplier directories, lab reports, forum threads).
 - [ ] Provide real GTINs, or accept the Merchant Center warnings.
-- [ ] Add your real support email/phone/address to `includes/config.php`.
+- [ ] Add your real support email/phone/address to `.env`.

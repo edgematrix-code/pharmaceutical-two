@@ -1,0 +1,18 @@
+kind: wasmer.io/App.v0
+name: arailpharmaceutical
+app_id: da_nZyIPt1Udg0Q
+owner: edgematrix-code
+package: .
+env:
+  PHPIX_PHP_THREADS: '4'
+enableDatabase: true
+enable_email: true
+annotations:
+  anybuild.run/config:
+    name: out
+    php_architecture: 32-bit
+    php_version: '8.3'
+    phpix: true
+  anybuild.run/provider: php
+  anybuild.run/version: 0.33.0
+  wasmer.io/version: 7.5.0

@@ -18,6 +18,41 @@ function json_out($data, int $status = 200): void
     exit;
 }
 
+/**
+ * Security headers for every public response.
+ *
+ * These used to live in .htaccess, where they never actually ran: nginx/Herd
+ * ignores .htaccess, and phpix (the PHP runtime behind Wasmer Edge) rejects
+ * the `Header always set ...` form by answering every request with
+ * "500 Htaccess evaluation failed". Sending them from PHP means they are
+ * really sent, on every host.
+ */
+function arail_send_security_headers(): void
+{
+    if (headers_sent()) {
+        return;
+    }
+
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+
+    // 'unsafe-inline' is required while the inline critical-CSS/age-gate
+    // snippets remain; tighten once they are externalised. The Google hosts are
+    // listed so GA4 keeps working once app.ga4_id is set. HSTS is left to the
+    // hosting platform.
+    header(
+        "Content-Security-Policy: default-src 'self'; "
+        . "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; "
+        . "style-src 'self' 'unsafe-inline'; "
+        . "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; "
+        . "font-src 'self'; "
+        . "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; "
+        . "base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+    );
+}
+
 /** Accepts JSON body or classic form POST. */
 function json_input(): array
 {

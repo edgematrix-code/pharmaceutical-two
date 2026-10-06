@@ -1,0 +1,13 @@
+# --- Secrets -------------------------------------------------------------
+# The live .env holds the database password and must never be committed.
+.env
+.env.*
+!.env.example
+
+# --- Runtime / user content ---------------------------------------------
+/uploads/
+*.log
+
+# --- Local tooling / legacy mirror backups ------------------------------
+.work/
+.backup-html/

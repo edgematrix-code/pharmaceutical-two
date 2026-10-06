@@ -10,6 +10,9 @@ declare(strict_types=1);
  * Safe to re-run: existing tables/data are kept.
  * Delete this file (or protect it) once the site is live.
  */
+require_once __DIR__ . '/includes/env.php';
+arail_load_env();
+
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
 
@@ -20,12 +23,12 @@ $log   = [];
  * Security guard: this installer creates a database, an admin user and seeds
  * the catalogue, so it must never be reachable anonymously on a live site.
  *   - CLI always works (php install.php).
- *   - Browser access requires ARAIL_ALLOW_INSTALL=1 in the environment.
+ *   - Browser access requires APP_ALLOW_INSTALL=1 in the environment (.env).
  * Delete this file once the site is live.
  */
-if (!$isCli && (getenv('ARAIL_ALLOW_INSTALL') ?: '') !== '1') {
+if (!$isCli && (getenv('APP_ALLOW_INSTALL') ?: '') !== '1') {
     http_response_code(403);
-    exit('Installer disabled. Run it from the command line, or set ARAIL_ALLOW_INSTALL=1 temporarily.');
+    exit('Installer disabled. Run it from the command line, or set APP_ALLOW_INSTALL=1 temporarily.');
 }
 
 function log_step(string $msg): void
@@ -125,7 +128,7 @@ try {
     $ok = true;
 } catch (Throwable $e) {
     log_step('ERROR: ' . $e->getMessage());
-    log_step('Check the database credentials in includes/config.php (host/port/user/password/database name).');
+    log_step('Check the database credentials in the .env file (DB_HOST / DB_PORT / DB_USERNAME / DB_PASSWORD / DB_NAME).');
     $ok = false;
 }
 

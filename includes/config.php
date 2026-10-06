@@ -2,61 +2,75 @@
 /**
  * Arail Pharmaceuticals - backend configuration.
  *
- * Edit the "db" credentials below (or set the ARAIL_DB_* environment
- * variables) so they match your MySQL server.
+ * EVERY value below comes from the environment, so this file normally never
+ * needs editing. Copy ".env.example" to ".env" and set the values there:
+ *
+ *   DB_HOST  DB_PORT  DB_USERNAME  DB_PASSWORD  DB_NAME   database connection
+ *   APP_*                                                 storefront settings
+ *   ADMIN_*                                               installer defaults
+ *
+ * includes/env.php parses that file and publishes each entry to getenv(); it is
+ * started below (and from includes/bootstrap.php) before any value is read.
+ * A real environment variable of the same name takes precedence over the file.
  *
  * IMPORTANT - domain setup
  * ------------------------
- * The production domain has NOT been purchased yet, so "base_url" is left
+ * The production domain has NOT been purchased yet, so APP_BASE_URL is left
  * empty on purpose. Nothing in the codebase hard-codes a host name any more:
  * every absolute URL (canonical tags, Open Graph, sitemaps, the Merchant
  * Center feed) is generated from this value.
  *
  *   - Leave it empty  -> URLs are built from the current request host (local
  *                        development only, strictly validated).
- *   - Set it once the domain is live, e.g.:
- *       'base_url' => 'https://your-real-domain.com',
- *     or via the environment variable ARAIL_BASE_URL.
+ *   - Set it once the domain is live, e.g. in .env:
+ *       APP_BASE_URL=https://your-real-domain.com
  *
  * Never put an interim or third-party domain here.
  */
+require_once __DIR__ . '/env.php';
+arail_load_env();
+
 return [
     'db' => [
-        'host'     => getenv('ARAIL_DB_HOST') ?: '127.0.0.1',
-        'port'     => getenv('ARAIL_DB_PORT') ?: '3306',
-        'name'     => getenv('ARAIL_DB_NAME') ?: 'arail',
-        'user'     => getenv('ARAIL_DB_USER') ?: 'root',
-        'password' => getenv('ARAIL_DB_PASS') !== false ? getenv('ARAIL_DB_PASS') : 'wiztech',
-        'charset'  => 'utf8mb4',
+        'host'     => env('DB_HOST') ?: '127.0.0.1',
+        'port'     => env('DB_PORT') ?: '3306',
+        'name'     => env('DB_NAME') ?: 'arail',
+        'user'     => env('DB_USERNAME') ?: 'root',
+        // An explicitly empty DB_PASSWORD is respected; the fallback only
+        // applies when the variable is absent altogether.
+        'password' => env('DB_PASSWORD', 'wiztech'),
+        'charset'  => env('DB_CHARSET') ?: 'utf8mb4',
     ],
     'app' => [
-        'name'          => 'Arail Pharmaceuticals',
-        'tagline'       => 'Pure Anabolics. Zero compromises.',
-        'email'         => 'support@example.com',
-        'phone'         => '',
-        'address'       => '',
-        'currency'      => '$',
-        'currency_code' => 'USD',
-        'country_code'  => 'US',
-        'shipping_flat' => 0.00,
+        'name'          => env('APP_NAME') ?: 'Arail Pharmaceuticals',
+        'tagline'       => env('APP_TAGLINE') ?: 'Pure Anabolics. Zero compromises.',
+        'email'         => env('APP_EMAIL') ?: 'support@example.com',
+        'phone'         => env('APP_PHONE') ?? '',
+        'address'       => env('APP_ADDRESS') ?? '',
+        'currency'      => env('APP_CURRENCY') ?: '$',
+        'currency_code' => env('APP_CURRENCY_CODE') ?: 'USD',
+        'country_code'  => env('APP_COUNTRY_CODE') ?: 'US',
+        'shipping_flat' => (float)(env('APP_SHIPPING_FLAT', '0.00')),
         // Minimum order value. Orders below this cannot be placed (see the
         // "Is there a minimum order?" FAQ on contact.php). The cart shows how
         // much is still missing and the checkout submit stays disabled until
         // the merchandise subtotal reaches it. Enforced on the client and,
         // authoritatively, in api/order.php.
-        'min_order'     => 300.00,
-        'uploads_dir'   => __DIR__ . '/../uploads',
-        'uploads_url'   => 'uploads',
-        'max_upload_mb' => 3,
+        'min_order'     => (float)(env('APP_MIN_ORDER', '300.00')),
+        // Absolute path to the uploads directory; defaults to ./uploads next to
+        // the project root when APP_UPLOADS_DIR is empty.
+        'uploads_dir'   => env('APP_UPLOADS_DIR') ?: (__DIR__ . '/../uploads'),
+        'uploads_url'   => env('APP_UPLOADS_URL') ?: 'uploads',
+        'max_upload_mb' => (int)(env('APP_MAX_UPLOAD_MB', '3')),
         // Empty until the real domain is registered. See the note above.
-        'base_url'      => getenv('ARAIL_BASE_URL') ?: '',
+        'base_url'      => env('APP_BASE_URL') ?? '',
         // Analytics / verification placeholders (fill in when you have them).
-        'ga4_id'        => getenv('ARAIL_GA4_ID') ?: '',
-        'gsc_token'     => getenv('ARAIL_GSC_TOKEN') ?: '',
+        'ga4_id'        => env('APP_GA4_ID') ?? '',
+        'gsc_token'     => env('APP_GSC_TOKEN') ?? '',
     ],
     'admin' => [
         // Used by install.php only (the real account lives in the database).
-        'default_user'     => 'admin',
-        'default_password' => 'Arail@2026',
+        'default_user'     => env('ADMIN_DEFAULT_USER') ?: 'admin',
+        'default_password' => env('ADMIN_DEFAULT_PASSWORD') ?: 'Arail@2026',
     ],
 ];

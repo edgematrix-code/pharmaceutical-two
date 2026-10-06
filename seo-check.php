@@ -237,6 +237,17 @@ if ($base !== '') {
         }
     }
 
+    // Secrets must never be downloadable. "Herd"/nginx happily serves any
+    // existing file, so a stray .env would leak the database password here.
+    foreach (['/.env', '/.env.example', '/.git/config'] as $secret) {
+        $status = $fetch($base . $secret)['status'];
+        printf("  %-3d %-58s %s\n", $status, $secret, $status === 200 ? 'DOWNLOADABLE!' : 'blocked');
+        if ($status === 200) {
+            $errors[] = 'Sensitive file is publicly downloadable: ' . $secret;
+        }
+    }
+    echo "\n";
+
     // Every URL listed in the sitemap (index + children) must return 200.
     $sitemap = $fetch($base . '/sitemap.xml');
     if (preg_match_all('~<loc>(.*?)</loc>~i', $sitemap['body'], $m)) {

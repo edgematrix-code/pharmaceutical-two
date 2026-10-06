@@ -52,10 +52,19 @@ if (isset($routes['legacy'][$legacyKey])) {
  * 2. Block non-public paths. A web server that does not read .htaccess
  *    would otherwise serve these directly; the CLI-only scripts guard
  *    themselves too (see db/ and tools/).
+ *
+ *    Dotfiles (notably ".env", which holds the database password) are
+ *    always refused. LocalValetDriver.php sends them here instead of
+ *    letting Herd/nginx serve them as static files.
  * ------------------------------------------------------------------ */
-if (preg_match('~^\.?(backup-html|work)(/|$)~i', $key)
+$lowerKey  = strtolower($key);
+$isDotfile = (bool)preg_match('~(^|/)\.~', $key)
+    && !(bool)preg_match('~^\.well-known(/|$)~', $lowerKey);
+
+if ($isDotfile
+    || preg_match('~^\.?(backup-html|work)(/|$)~i', $key)
     || preg_match('~^(db|tools)(/|$)~i', $key)
-    || in_array(strtolower($key), ['router.php', 'seo-check.php'], true)) {
+    || in_array($lowerKey, ['router.php', 'seo-check.php', 'localvaletdriver.php'], true)) {
     http_response_code(403);
     header('Content-Type: text/plain; charset=utf-8');
     exit('Forbidden');
