@@ -415,3 +415,262 @@
     min-height: 2.5rem;
   }
 }
+
+/* --------------------------------------------------------------------------- *
+ * Dedicated crypto payment page (/pay/<order-number>/)
+ *
+ * Full-width, single-purpose page reached straight after checkout: the coin,
+ * the amount, the address with a copy control, and numbered steps. It is the
+ * only place the address lives now, so it reads as a proper payment screen.
+ * --------------------------------------------------------------------------- */
+
+.crypto-page {
+  max-width: 42rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.crypto-page__card {
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+.crypto-page__card--narrow {
+  text-align: center;
+}
+
+.crypto-page__hero {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.crypto-page__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  margin-bottom: 0.9rem;
+}
+
+.crypto-page__badge img {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: block;
+}
+
+.crypto-page__eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--accent-dark);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.crypto-page__title {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.crypto-page__sub {
+  margin: 0.6rem auto 0;
+  max-width: 34rem;
+  color: var(--muted-2);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.crypto-page__amount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  margin: 1.25rem 0;
+  padding: 1.1rem;
+  border: 1px solid rgba(71, 169, 212, 0.3);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--accent-soft), #ffffff);
+}
+
+.crypto-page__amount-label {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.crypto-page__amount-value {
+  color: var(--ink);
+  font-size: clamp(1.75rem, 5vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.crypto-page__amount-note {
+  color: var(--muted-2);
+  font-size: 0.8rem;
+}
+
+.crypto-page__field {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-soft);
+}
+
+.crypto-page__field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.crypto-page__field-label {
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.crypto-page__network {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(71, 169, 212, 0.14);
+  color: var(--accent-dark);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.crypto-page__address-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.crypto-page__address {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.crypto-page__copy {
+  flex-shrink: 0;
+  padding: 0 1.1rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.crypto-page__copy:hover {
+  background: var(--accent-dark);
+}
+
+.crypto-page__copy:active {
+  transform: translateY(1px);
+}
+
+.crypto-page__copy.is-copied {
+  background: var(--badge);
+}
+
+.crypto-page__steps {
+  margin: 1.25rem 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.crypto-page__steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  color: var(--muted-2);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.crypto-page__num {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.crypto-page__warn {
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(185, 28, 28, 0.18);
+  border-radius: 12px;
+  background: rgba(185, 28, 28, 0.06);
+  color: var(--color-red-700);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.crypto-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.crypto-pay__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 480px) {
+  .crypto-page__address-row {
+    flex-direction: column;
+  }
+
+  .crypto-page__copy {
+    min-height: 2.75rem;
+  }
+
+  .crypto-page__actions {
+    flex-direction: column;
+  }
+
+  .crypto-page__actions a {
+    justify-content: center;
+    text-align: center;
+  }
+}

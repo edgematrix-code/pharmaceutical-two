@@ -171,7 +171,7 @@ require __DIR__ . '/includes/layout/head.php';
           <div class="checkout-summary surface-card"
                data-checkout-summary
                data-cart-url="<?= e(url_path('cart/')) ?>"
-               data-confirm-url="<?= e(url_path('order/')) ?>"
+               data-confirm-url="<?= e(url_path('pay/')) ?>"
                data-shipping="<?= e(number_format((float)arail_config()['app']['shipping_flat'], 2, '.', '')) ?>"
                data-min-order="<?= e(number_format(min_order_value(), 2, '.', '')) ?>">
             <h2 class="checkout-summary__title">Order summary</h2>
@@ -233,20 +233,13 @@ require __DIR__ . '/includes/layout/head.php';
 
           <div class="checkout-payment surface-card">
             <h2 class="checkout-section__title">Payment</h2>
-            <p class="checkout-payment__intro">Choose how you want to pay. Crypto goes straight to our wallet — no third-party processor in between.</p>
+            <p class="checkout-payment__intro">Choose how you want to pay. After you place the order we’ll show the wallet address, the amount and the payment steps on a dedicated page.</p>
             <ul class="checkout-payment__methods" role="radiogroup" aria-label="Payment method">
               <?php $first = true; ?>
               <?php foreach ($providers as $value => $provider): ?>
                 <li>
                   <label class="checkout-payment__card<?= $first ? ' is-selected' : '' ?>">
-                    <input class="checkout-payment__radio" type="radio" value="<?= e($value) ?>" name="payment"
-                           data-payment-option
-                           data-coin-name="<?= e($provider['label']) ?>"
-                           data-coin-symbol="<?= e($provider['symbol']) ?>"
-                           data-coin-network="<?= e($provider['network']) ?>"
-                           data-coin-address="<?= e($provider['address']) ?>"
-                           data-coin-mark="<?= e(asset($provider['mark'])) ?>"
-                           <?= $first ? ' checked' : '' ?>>
+                    <input class="checkout-payment__radio" type="radio" value="<?= e($value) ?>" name="payment"<?= $first ? ' checked' : '' ?>>
                     <span class="checkout-payment__brand" aria-hidden="true">
                       <img alt="" class="checkout-payment__mark" src="<?= e(asset($provider['mark'])) ?>">
                     </span>
@@ -260,22 +253,6 @@ require __DIR__ . '/includes/layout/head.php';
                 <?php $first = false; ?>
               <?php endforeach; ?>
             </ul>
-            <div class="checkout-payment__coin" data-payment-coin data-copy-scope hidden>
-              <div class="checkout-payment__coin-head">
-                <span class="checkout-payment__coin-badge" aria-hidden="true">
-                  <img alt="" class="checkout-payment__mark" data-coin-image src="">
-                </span>
-                <span class="checkout-payment__coin-meta">
-                  <span class="checkout-payment__coin-title">Send <strong data-coin-symbol-label></strong> to this wallet</span>
-                  <span class="checkout-payment__coin-network" data-coin-network-label></span>
-                </span>
-              </div>
-              <div class="checkout-payment__address-row">
-                <code class="checkout-payment__address" data-coin-address-label data-copy-value></code>
-                <button type="button" class="checkout-payment__copy" data-copy-address>Copy address</button>
-              </div>
-              <p class="checkout-payment__coin-note">Send only <strong data-coin-symbol-note></strong> on the stated network. Your order is marked paid once the transfer confirms.</p>
-            </div>
             <p class="checkout-min-note" data-checkout-min role="status" hidden></p>
             <p class="checkout-error" data-checkout-status role="status"></p>
             <button type="submit" class="checkout-submit btn-primary">Place order</button>

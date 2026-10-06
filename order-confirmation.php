@@ -43,7 +43,7 @@ require __DIR__ . '/includes/layout/head.php';
       <header class="space-y-3">
         <p class="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--accent)]">Thank you</p>
         <h1 class="text-[clamp(2rem,4.5vw,3rem)] font-bold tracking-[-0.01em] text-[var(--ink)]">Order <?= e((string)$order['order_number']) ?></h1>
-        <p class="text-base text-[var(--muted-2)]"><?php if ($crypto_wallet): ?>We have received your order. Send the crypto payment below to complete it — we will confirm to <?= e((string)$order['customer_email']) ?>.<?php else: ?>We have received your order and will email payment instructions to <?= e((string)$order['customer_email']) ?> shortly.<?php endif; ?></p>
+        <p class="text-base text-[var(--muted-2)]"><?php if ($crypto_wallet): ?>We have received your order. Open the payment page to send the crypto payment and complete it — we will confirm to <?= e((string)$order['customer_email']) ?>.<?php else: ?>We have received your order and will email payment instructions to <?= e((string)$order['customer_email']) ?> shortly.<?php endif; ?></p>
       </header>
 
       <section class="surface-card space-y-3 px-6 py-8">
@@ -68,25 +68,19 @@ require __DIR__ . '/includes/layout/head.php';
       </section>
 
       <?php if ($crypto_wallet): ?>
-        <section class="crypto-pay surface-card" aria-label="Crypto payment details">
+        <section class="crypto-pay surface-card" aria-label="Crypto payment">
           <div class="crypto-pay__head">
             <span class="crypto-pay__badge" aria-hidden="true">
               <img src="<?= e(asset($crypto_wallet['mark'])) ?>" alt="" width="32" height="32">
             </span>
             <div>
-              <h2 class="crypto-pay__title">Pay with <?= e($crypto_wallet['label']) ?></h2>
-              <p class="crypto-pay__sub">Send <?= e($crypto_wallet['symbol']) ?> to the wallet below. We mark the order paid once the transfer confirms on-chain.</p>
+              <h2 class="crypto-pay__title">Payment required &mdash; <?= e($crypto_wallet['label']) ?></h2>
+              <p class="crypto-pay__sub">Your order is reserved. Open the payment page for the wallet address, the amount in <?= e($crypto_wallet['symbol']) ?> and the step-by-step instructions.</p>
             </div>
           </div>
-          <dl class="crypto-pay__meta">
-            <div><dt>Network</dt><dd><?= e($crypto_wallet['network']) ?></dd></div>
-            <div><dt>Amount due</dt><dd><?= e(format_money((float)$order['total'])) ?> <span class="crypto-pay__unit">(pay the <?= e($crypto_wallet['symbol']) ?> equivalent)</span></dd></div>
-          </dl>
-          <div class="crypto-pay__address-row" data-copy-scope>
-            <code class="crypto-pay__address" data-copy-value="<?= e($crypto_wallet['address']) ?>"><?= e($crypto_wallet['address']) ?></code>
-            <button type="button" class="crypto-pay__copy" data-copy-address>Copy address</button>
+          <div class="crypto-pay__actions">
+            <a class="btn-primary !min-h-12 !px-6 !text-sm" href="<?= e(url_path('pay/' . $order['order_number'] . '/')) ?>">Open payment page</a>
           </div>
-          <p class="crypto-pay__note">Use order number <strong><?= e((string)$order['order_number']) ?></strong> as the payment reference where your wallet supports it, and keep the transaction ID.</p>
         </section>
       <?php endif; ?>
 

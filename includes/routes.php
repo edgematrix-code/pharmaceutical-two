@@ -42,6 +42,7 @@ return [
         'product'  => ['product.php', 'slug'],
         'category' => ['category.php', 'slug'],
         'order'    => ['order-confirmation.php', 'number'],
+        'pay'      => ['pay.php', 'number'],
     ],
 
     'legacy' => [

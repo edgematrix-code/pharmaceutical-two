@@ -1077,13 +1077,17 @@ sibling app returns for its own `.htaccess`.
   `APP_ETH_ADDRESS` in `.env` (defaults in `includes/config.php`, documented in
   `.env.example`), so a new wallet needs no template edit.
 - **Checkout** renders the two options as radio cards with a coin mark and ticker
-  chip; the selected card reveals a wallet panel (address, network, one-click
-  **Copy address**). Styles live in `assets/css/site.css`, behaviour in
-  `assets/js/cart.js`. `bitcoin` is the default option client- and server-side.
-- **Order confirmation** shows a `Pay with …` panel for the chosen coin (network,
-  amount due, copyable address) so payment can start immediately instead of
-  waiting on an email; the admin order view shows the label plus receiving
-  address.
+  chip; `bitcoin` is the default client- and server-side. Placing the order
+  redirects to the dedicated payment page.
+- **Dedicated payment page** (`pay.php`, dynamic route `pay`, i.e.
+  `/pay/<order-number>/`) shows the chosen coin, the amount due, the wallet
+  address with a one-click **Copy address**, the network, numbered payment steps
+  and a wrong-network warning, so the address lives on its own full-width screen
+  instead of inside the checkout form. Styles in `assets/css/site.css`; the copy
+  control is handled generically by `assets/js/cart.js`.
+- **Order confirmation** links to the payment page (the inline address panel was
+  removed so it is not duplicated there); the admin order view shows the label
+  plus receiving address.
 - `orders.payment_method` was an `ENUM` limited to the old values, which made
   every ETH order fail with a 500. `db/schema.php` and `db/migrate.php` now
   include `ethereum` (default `bitcoin`); `php db/migrate.php` was run to widen
@@ -1098,9 +1102,13 @@ sibling app returns for its own `.htaccess`.
 **Verified**
 
 - `php -l` on every edited PHP file, `node --check assets/js/cart.js`.
-- Headless browser on the real checkout page: default option is Bitcoin with the
-  BTC address; selecting Ethereum swaps the panel to the ETH address; **Copy
-  address** reports `Copied ✓` and the clipboard receives exactly the ETH address.
+- Headless browser, full flow: a seeded checkout filled and submitted as
+  Ethereum navigates to `/pay/<order-number>/`, which renders the ETH address,
+  `$400.00` and the order number; **Copy address** there reports `Copied ✓` with
+  the clipboard receiving exactly the ETH address.
+- Server-rendered checks: the checkout no longer contains the inline address
+  panel and redirects to `/pay/`; the payment page and the confirmation link to
+  it both render correctly.
 - A real order through `api/order.php` with `payment_method=ethereum` succeeded,
   and its confirmation page rendered the Ethereum panel (address, network,
   total). The test order was deleted afterwards.

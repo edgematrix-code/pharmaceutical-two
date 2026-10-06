@@ -53,12 +53,6 @@
     return Math.max(0, parseInt(item && item.qty, 10) || 0);
   }
 
-  /** Sets the text of the first match inside a scope, when it exists. */
-  function setText(scope, selector, value) {
-    var el = scope.querySelector(selector);
-    if (el) { el.textContent = value; }
-  }
-
   /* ---------- coupon ---------- */
   /* There is no pricing engine for coupons yet, so the code the customer
      types is simply remembered and passed on with the order. */
@@ -572,7 +566,6 @@
         + couponFormHtml('coupon-checkout', 'checkout', getCoupon());
       syncCouponFields();
       applyMin(subtotal);
-      syncCoinPanel();
     }
 
     /* Add-to-cart for the upsell strip. addItem() fires cart:updated, which
@@ -589,26 +582,6 @@
       btn.disabled = true;
     }
 
-    /** Reveals the wallet address for the selected payment option. */
-    function syncCoinPanel() {
-      var panel = form.querySelector('[data-payment-coin]');
-      if (!panel) return;
-      var radio = form.querySelector('.checkout-payment__radio:checked');
-      var address = radio ? String(radio.getAttribute('data-coin-address') || '') : '';
-      if (!radio || address === '') { panel.hidden = true; return; }
-      panel.hidden = false;
-      var image = panel.querySelector('[data-coin-image]');
-      if (image) { image.src = radio.getAttribute('data-coin-mark') || ''; }
-      setText(panel, '[data-coin-symbol-label]', radio.getAttribute('data-coin-symbol') || '');
-      setText(panel, '[data-coin-network-label]', radio.getAttribute('data-coin-network') || '');
-      setText(panel, '[data-coin-symbol-note]', radio.getAttribute('data-coin-symbol') || '');
-      var code = panel.querySelector('[data-coin-address-label]');
-      if (code) {
-        code.textContent = address;
-        code.setAttribute('data-copy-value', address);
-      }
-    }
-
     form.addEventListener('change', function (ev) {
       var radio = ev.target.closest ? ev.target.closest('.checkout-payment__radio') : null;
       if (!radio) return;
@@ -616,7 +589,6 @@
         var input = card.querySelector('.checkout-payment__radio');
         card.classList.toggle('is-selected', !!input && input.checked);
       });
-      syncCoinPanel();
     });
 
     form.addEventListener('click', function (ev) {
