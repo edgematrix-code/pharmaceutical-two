@@ -83,9 +83,13 @@ require __DIR__ . '/partials/header.php';
         <p style="margin:.5rem 0" class="small"><span class="muted">Customer note:</span><br><?= nl2br(e($order['customer_notes'])) ?></p>
       <?php endif; ?>
       <p class="small muted" style="margin:.5rem 0">
-        Placed <?= e($order['created_at']) ?> · Payment: <?= e($order['payment_method']) ?> ·
+        Placed <?= e($order['created_at']) ?> · Payment: <?= e(payment_method_label((string)$order['payment_method'])) ?> ·
         <span class="badge <?= e($order['payment_status']) ?>"><?= e($order['payment_status']) ?></span>
       </p>
+      <?php $crypto_wallet = crypto_payment_methods()[(string)$order['payment_method']] ?? null; ?>
+      <?php if ($crypto_wallet): ?>
+        <p class="small" style="margin:.25rem 0"><span class="muted">Wallet:</span> <code><?= e($crypto_wallet['address']) ?></code> (<?= e($crypto_wallet['network']) ?>)</p>
+      <?php endif; ?>
     </div>
 
     <div class="card">

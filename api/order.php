@@ -6,7 +6,7 @@ require_once __DIR__ . '/../includes/api-boot.php';
 /* POST /api/order.php
    JSON body:  { "customer": {"first_name","last_name","name","email","phone",
                                "address","city","state","postal_code","country","notes"},
-                 "payment_method": "btcpaygf_default",
+                 "payment_method": "bitcoin",
                  "coupon": "",
                  "items": [ {"slug": "test-cyp-200", "qty": 1} ] }
    Or form POST with items as a JSON string in the "items" field.
@@ -62,7 +62,7 @@ try {
         $notes = $notes === '' ? $couponLine : $notes . "\n" . $couponLine;
     }
 
-    $payment = req_str($src, 'payment_method', 'btcpaygf_default');
+    $payment = req_str($src, 'payment_method', 'bitcoin');
     if (!array_key_exists($payment, payment_methods())) {
         $payment = 'other';
     }

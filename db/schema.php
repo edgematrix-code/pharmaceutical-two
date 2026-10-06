@@ -86,7 +86,7 @@ return [
         shipping_address TEXT NULL,
         customer_notes TEXT NULL,
         admin_notes TEXT NULL,
-        payment_method ENUM('btcpaygf_default','cryptapi','bitcoin','bank','cash','other') NOT NULL DEFAULT 'btcpaygf_default',
+        payment_method ENUM('bitcoin','ethereum','btcpaygf_default','cryptapi','bank','cash','other') NOT NULL DEFAULT 'bitcoin',
         payment_status ENUM('unpaid','pending','paid','refunded') NOT NULL DEFAULT 'unpaid',
         status ENUM('pending','confirmed','processing','shipped','delivered','cancelled') NOT NULL DEFAULT 'pending',
         subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,

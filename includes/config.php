@@ -15,15 +15,15 @@
  *
  * IMPORTANT - domain setup
  * ------------------------
- * The production domain has NOT been purchased yet, so APP_BASE_URL is left
- * empty on purpose. Nothing in the codebase hard-codes a host name any more:
- * every absolute URL (canonical tags, Open Graph, sitemaps, the Merchant
- * Center feed) is generated from this value.
+ * The live domain is arailpharma.si, so APP_BASE_URL is set to
+ * https://arailpharma.si in ".env" (and documented in .env.example). Nothing
+ * in the codebase hard-codes a host name: every absolute URL (canonical tags,
+ * Open Graph, sitemaps, the Merchant Center feed) is generated from this value.
  *
  *   - Leave it empty  -> URLs are built from the current request host (local
  *                        development only, strictly validated).
- *   - Set it once the domain is live, e.g. in .env:
- *       APP_BASE_URL=https://your-real-domain.com
+ *   - Set it, e.g. in .env:
+ *       APP_BASE_URL=https://arailpharma.si
  *
  * Never put an interim or third-party domain here.
  */
@@ -44,12 +44,18 @@ return [
     'app' => [
         'name'          => env('APP_NAME') ?: 'Arail Pharmaceuticals',
         'tagline'       => env('APP_TAGLINE') ?: 'Pure Anabolics. Zero compromises.',
-        'email'         => env('APP_EMAIL') ?: 'support@example.com',
+        'email'         => env('APP_EMAIL') ?: 'lemon@arailpharma.si',
         'phone'         => env('APP_PHONE') ?? '',
         'address'       => env('APP_ADDRESS') ?? '',
         'currency'      => env('APP_CURRENCY') ?: '$',
         'currency_code' => env('APP_CURRENCY_CODE') ?: 'USD',
         'country_code'  => env('APP_COUNTRY_CODE') ?: 'US',
+        // Crypto wallet addresses shown as the Bitcoin / Ethereum payment
+        // options at checkout and on the order confirmation. These are public
+        // deposit addresses, not secrets, but they stay configurable so a new
+        // wallet can be adopted without touching any template.
+        'btc_address'   => env('APP_BTC_ADDRESS') ?: 'bc1q9take6d97hd9wthp7g2g3kttrly0k4sx84w2c8',
+        'eth_address'   => env('APP_ETH_ADDRESS') ?: '0x40839B08ac24B45F91f15E7B681467e35EAF156A',
         'shipping_flat' => (float)(env('APP_SHIPPING_FLAT', '0.00')),
         // Minimum order value. Orders below this cannot be placed (see the
         // "Is there a minimum order?" FAQ on contact.php). The cart shows how

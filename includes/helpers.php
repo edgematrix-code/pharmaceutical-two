@@ -160,13 +160,51 @@ function min_order_notice(float $subtotal): string
 function payment_methods(): array
 {
     return [
+        // Current crypto options, in display order.
+        'bitcoin'          => 'Bitcoin (BTC)',
+        'ethereum'         => 'Ethereum (ETH)',
+        // Legacy values kept so orders placed before the wallet options were
+        // introduced still resolve to a readable label in the admin.
         'btcpaygf_default' => 'Bitcoin (BTCPay)',
         'cryptapi'         => 'Other cryptocurrency',
-        'bitcoin'          => 'Bitcoin',
         'bank'             => 'Bank transfer',
         'cash'             => 'Cash / other',
         'other'            => 'Other',
     ];
+}
+
+/**
+ * Crypto wallet payment methods, with the details the checkout and order
+ * confirmation need to render. Keyed by payment_method; only the coins the
+ * store accepts are returned, and an entry with no configured address is
+ * dropped so a half-configured store never shows a dead payment option.
+ *
+ * @return array<string, array{label:string,symbol:string,network:string,mark:string,address:string,desc:string}>
+ */
+function crypto_payment_methods(): array
+{
+    $app = arail_config()['app'];
+
+    $methods = [
+        'bitcoin' => [
+            'label'   => 'Bitcoin',
+            'symbol'  => 'BTC',
+            'network' => 'Bitcoin network',
+            'mark'    => 'img/bitcoin-logo.svg',
+            'address' => trim((string)($app['btc_address'] ?? '')),
+            'desc'    => 'Pay in BTC. You will send to our wallet address shown below.',
+        ],
+        'ethereum' => [
+            'label'   => 'Ethereum',
+            'symbol'  => 'ETH',
+            'network' => 'Ethereum mainnet (ERC-20)',
+            'mark'    => 'img/crypto-eth.svg',
+            'address' => trim((string)($app['eth_address'] ?? '')),
+            'desc'    => 'Pay in ETH. You will send to our wallet address shown below.',
+        ],
+    ];
+
+    return array_filter($methods, static fn (array $m): bool => $m['address'] !== '');
 }
 
 function payment_method_label(?string $value): string

@@ -3,10 +3,11 @@
 This document records everything that was audited, changed and verified, plus the
 work that is deliberately left for the store owner.
 
-**Important:** the production domain has **not** been purchased. No domain name is
-hard-coded anywhere in the codebase any more — every absolute URL (canonical,
-Open Graph, sitemap, Merchant Center feed) is generated from `APP_BASE_URL` in
-`.env`, which is intentionally empty until the real domain exists.
+**Important:** the live domain is **arailpharma.si**. No domain name is
+hard-coded anywhere in the codebase — every absolute URL (canonical, Open Graph,
+sitemap, Merchant Center feed) is generated from `APP_BASE_URL` in `.env`, which
+is now set to `https://arailpharma.si`. (Earlier phases of this document were
+written before the domain existed and describe it as unpurchased.)
 
 ---
 
@@ -1063,10 +1064,63 @@ sibling app returns for its own `.htaccess`.
 
 ---
 
+## Crypto wallet payments (BTC + ETH) and going live on arailpharma.si
+
+**Added — wallet payments**
+
+- `crypto_payment_methods()` in `includes/helpers.php` is the single source for
+  the two options: **Bitcoin (BTC)** and **Ethereum (ETH)** — label, ticker,
+  network, brand mark, wallet address and description. `payment_methods()` gained
+  the `ethereum` key and kept the legacy values (`btcpaygf_default`, `cryptapi`,
+  `bank`, `cash`, `other`) so older orders still resolve to a readable label.
+- Wallet addresses are configuration, not code: `APP_BTC_ADDRESS` /
+  `APP_ETH_ADDRESS` in `.env` (defaults in `includes/config.php`, documented in
+  `.env.example`), so a new wallet needs no template edit.
+- **Checkout** renders the two options as radio cards with a coin mark and ticker
+  chip; the selected card reveals a wallet panel (address, network, one-click
+  **Copy address**). Styles live in `assets/css/site.css`, behaviour in
+  `assets/js/cart.js`. `bitcoin` is the default option client- and server-side.
+- **Order confirmation** shows a `Pay with …` panel for the chosen coin (network,
+  amount due, copyable address) so payment can start immediately instead of
+  waiting on an email; the admin order view shows the label plus receiving
+  address.
+- `orders.payment_method` was an `ENUM` limited to the old values, which made
+  every ETH order fail with a 500. `db/schema.php` and `db/migrate.php` now
+  include `ethereum` (default `bitcoin`); `php db/migrate.php` was run to widen
+  the live column.
+
+**Added — live domain and contact email**
+
+- `APP_BASE_URL=https://arailpharma.si` and `APP_EMAIL=lemon@arailpharma.si` are
+  set in `.env`, so canonical tags, Open Graph, the sitemap and the product feed
+  use the real domain and the published contact address is the business email.
+
+**Verified**
+
+- `php -l` on every edited PHP file, `node --check assets/js/cart.js`.
+- Headless browser on the real checkout page: default option is Bitcoin with the
+  BTC address; selecting Ethereum swaps the panel to the ETH address; **Copy
+  address** reports `Copied ✓` and the clipboard receives exactly the ETH address.
+- A real order through `api/order.php` with `payment_method=ethereum` succeeded,
+  and its confirmation page rendered the Ethereum panel (address, network,
+  total). The test order was deleted afterwards.
+- Every storefront route (`/`, `/shop/`, `/checkout/`, `/cart/`, `/stacks/`, a
+  product page, `/contact/`, `/bitcoin/`, an unknown order) returns 200 with no
+  PHP errors.
+
+**Note**
+
+- These are plain public deposit addresses with no price feed, so the
+  confirmation states the USD total and asks for the equivalent in the chosen
+  coin. Automatic on-chain confirmation (BTCPay or another processor) is not part
+  of this change.
+
+---
+
 ## Manual checklist for you
 
-- [ ] Buy the domain, then set `APP_BASE_URL` in `.env` and re-run
-      `php seo-check.php`.
+- [x] Domain live — `APP_BASE_URL=https://arailpharma.si` is set in `.env`;
+      re-run `php seo-check.php` whenever content changes.
 - [ ] Uncomment the canonical-host rule in `.htaccess` and set your real domain.
 - [ ] Enable HSTS in `.htaccess` once HTTPS is verified.
 - [ ] Delete `install.php` (or keep it CLI-only) — it is already HTTP-disabled.
@@ -1078,4 +1132,5 @@ sibling app returns for its own `.htaccess`.
 - [ ] Collect real customer reviews (they are the only source of ratings).
 - [ ] Build backlinks (supplier directories, lab reports, forum threads).
 - [ ] Provide real GTINs, or accept the Merchant Center warnings.
-- [ ] Add your real support email/phone/address to `.env`.
+- [x] Business email set (`lemon@arailpharma.si`). Add a phone/address to
+      `.env` if you want them shown in the footer and on the contact page.

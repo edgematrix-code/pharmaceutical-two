@@ -164,3 +164,254 @@
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+/* --------------------------------------------------------------------------- *
+ * Crypto payment options (checkout + order confirmation)
+ *
+ * theme.css ships the base `.checkout-payment__card` shell; everything below
+ * is new and lives here because there is no Tailwind build step in this repo.
+ * The address is a public deposit address, so it is shown in a monospace box
+ * with a one-click copy control rather than hidden behind an email.
+ * --------------------------------------------------------------------------- */
+
+.checkout-payment__intro {
+  margin: -0.25rem 0 1rem;
+  color: var(--muted-2);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.checkout-payment__card-symbol {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted-2);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+.checkout-payment__card.is-selected .checkout-payment__card-symbol {
+  background: rgba(71, 169, 212, 0.16);
+  color: var(--accent-dark);
+}
+
+/* Wallet detail panel for the selected crypto option. */
+.checkout-payment__coin {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(71, 169, 212, 0.35);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--accent-soft), #ffffff);
+}
+
+.checkout-payment__coin[hidden] {
+  display: none;
+}
+
+.checkout-payment__coin-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.8rem;
+}
+
+.checkout-payment__coin-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(25, 48, 58, 0.14);
+  flex-shrink: 0;
+}
+
+.checkout-payment__coin-badge .checkout-payment__mark {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.checkout-payment__coin-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.checkout-payment__coin-title {
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.checkout-payment__coin-network {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.checkout-payment__address-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.checkout-payment__address,
+.crypto-pay__address {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.checkout-payment__copy,
+.crypto-pay__copy {
+  flex-shrink: 0;
+  padding: 0 0.95rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.checkout-payment__copy:hover,
+.crypto-pay__copy:hover {
+  background: var(--accent-dark);
+}
+
+.checkout-payment__copy:active,
+.crypto-pay__copy:active {
+  transform: translateY(1px);
+}
+
+.checkout-payment__copy.is-copied,
+.crypto-pay__copy.is-copied {
+  background: var(--badge);
+}
+
+.checkout-payment__coin-note {
+  margin: 0.7rem 0 0;
+  color: var(--muted-2);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+/* Order confirmation payment panel. */
+.crypto-pay {
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.crypto-pay__head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.crypto-pay__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  flex-shrink: 0;
+}
+
+.crypto-pay__badge img {
+  width: 2rem;
+  height: 2rem;
+  display: block;
+}
+
+.crypto-pay__title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.crypto-pay__sub {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.crypto-pay__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.75rem;
+  margin: 0 0 1rem;
+}
+
+.crypto-pay__meta dt {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.crypto-pay__meta dd {
+  margin: 0.1rem 0 0;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.crypto-pay__unit {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.crypto-pay__address-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.crypto-pay__address {
+  background: var(--surface-soft);
+}
+
+.crypto-pay__copy {
+  padding: 0 1.1rem;
+}
+
+.crypto-pay__note {
+  margin: 0.8rem 0 0;
+  color: var(--muted-2);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .checkout-payment__address-row,
+  .crypto-pay__address-row {
+    flex-direction: column;
+  }
+
+  .checkout-payment__copy,
+  .crypto-pay__copy {
+    min-height: 2.5rem;
+  }
+}

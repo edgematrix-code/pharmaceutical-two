@@ -107,12 +107,12 @@ $log[] = 'ensured table customers';
 add_column($pdo, 'orders', 'customer_id', 'INT UNSIGNED NULL DEFAULT NULL', $log);
 
 /*
- * Checkout offers the crypto providers the storefront actually uses
- * (BTCPay and CryptAPI), so the payment_method enum has to accept them.
- * The old values stay in the enum: orders placed before the redesign keep
- * their original method and still resolve to a readable label.
+ * Checkout offers the crypto wallets the storefront actually uses (Bitcoin
+ * and Ethereum) alongside the legacy provider values, so the payment_method
+ * enum has to accept them. The old values stay in the enum: orders placed
+ * before the wallet options keep their original method and a readable label.
  */
-$paymentEnum = "enum('btcpaygf_default','cryptapi','bitcoin','bank','cash','other')";
+$paymentEnum = "enum('bitcoin','ethereum','btcpaygf_default','cryptapi','bank','cash','other')";
 $stmt = $pdo->prepare(
     'SELECT COLUMN_TYPE FROM information_schema.columns
      WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?'
@@ -124,7 +124,7 @@ if ($current === '') {
 } elseif (strcasecmp($current, $paymentEnum) === 0) {
     $log[] = 'skip  orders.payment_method (already current)';
 } else {
-    $pdo->exec("ALTER TABLE `orders` MODIFY COLUMN `payment_method` $paymentEnum NOT NULL DEFAULT 'btcpaygf_default'");
+    $pdo->exec("ALTER TABLE `orders` MODIFY COLUMN `payment_method` $paymentEnum NOT NULL DEFAULT 'bitcoin'");
     $log[] = 'extended orders.payment_method enum';
 }
 

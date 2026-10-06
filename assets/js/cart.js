@@ -53,6 +53,12 @@
     return Math.max(0, parseInt(item && item.qty, 10) || 0);
   }
 
+  /** Sets the text of the first match inside a scope, when it exists. */
+  function setText(scope, selector, value) {
+    var el = scope.querySelector(selector);
+    if (el) { el.textContent = value; }
+  }
+
   /* ---------- coupon ---------- */
   /* There is no pricing engine for coupons yet, so the code the customer
      types is simply remembered and passed on with the order. */
@@ -273,6 +279,130 @@
     });
   }
 
+  /* ---------- copy to clipboard ---------- */
+  function copyToClipboard(value) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(value);
+    }
+    return new Promise(function (resolve, reject) {
+      try {
+        var area = document.createElement('textarea');
+        area.value = value;
+        area.setAttribute('readonly', '');
+        area.style.position = 'fixed';
+        area.style.top = '-1000px';
+        document.body.appendChild(area);
+        area.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(area);
+        ok ? resolve() : reject(new Error('copy failed'));
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  /* Any [data-copy-address] button copies the nearest [data-copy-value] text
+     inside its [data-copy-scope]. Used by the checkout wallet panel and the
+     order confirmation. */
+  function bindCopyButtons() {
+    document.addEventListener('click', function (ev) {
+      var btn = ev.target.closest ? ev.target.closest('[data-copy-address]') : null;
+      if (!btn) return;
+      ev.preventDefault();
+      var scope = btn.closest('[data-copy-scope]') || btn.closest('section') || document;
+      var node = scope.querySelector('[data-copy-value]');
+      var value = node ? String(node.getAttribute('data-copy-value') || node.textContent || '').trim() : '';
+      if (value === '') return;
+      var original = btn.getAttribute('data-copy-label') || btn.textContent;
+      btn.setAttribute('data-copy-label', original);
+      copyToClipboard(value).then(function () {
+        btn.textContent = 'Copied \u2713';
+        btn.classList.add('is-copied');
+        setTimeout(function () { btn.textContent = original; btn.classList.remove('is-copied'); }, 1600);
+      }).catch(function () {
+        btn.textContent = 'Copy failed';
+        setTimeout(function () { btn.textContent = original; }, 1600);
+      });
+    });
+  }
+
+  /* ---------- stack bundles ---------- */
+  /* "Add stack to cart" buttons carry their bundle as JSON (slug + qty). The
+     product details are resolved from the live catalogue so the cart always
+     shows current names, prices and images, then every line is added with the
+     quantity the kit calls for. */
+  function bindStackButtons() {
+    var root = document.querySelector('[data-stack-root]');
+    if (!root) return;
+
+    var imageBase = root.getAttribute('data-image-base') || (window.ARAIL_BASE || '/') + 'assets/img/';
+    var productsUrl = (window.ARAIL_BASE || '/') + 'api/products.php?limit=200';
+    var catalog = null;
+    var pending = null;
+
+    function loadCatalog() {
+      if (catalog) return Promise.resolve(catalog);
+      if (pending) return pending;
+      pending = fetch(productsUrl)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          catalog = (data && data.products) || [];
+          return catalog;
+        })
+        .catch(function () {
+          pending = null;
+          return null;
+        });
+      return pending;
+    }
+
+    document.addEventListener('click', function (ev) {
+      var btn = ev.target.closest ? ev.target.closest('[data-stack-add]') : null;
+      if (!btn || btn.disabled) return;
+      ev.preventDefault();
+
+      var items = [];
+      try { items = JSON.parse(btn.getAttribute('data-stack-items') || '[]') || []; } catch (e) { items = []; }
+      if (!items.length) return;
+
+      var original = btn.textContent;
+      btn.disabled = true;
+
+      loadCatalog().then(function (list) {
+        var added = 0;
+        if (list) {
+          var bySlug = {};
+          list.forEach(function (p) { bySlug[p.slug] = p; });
+          items.forEach(function (row) {
+            var p = bySlug[row.slug];
+            if (!p) return;
+            var price = p.sale_price != null && p.sale_price > 0 ? p.sale_price : p.price;
+            addItem({
+              slug: p.slug,
+              name: p.name,
+              price: price,
+              image: imageBase + (p.image ? String(p.image).split('/').pop() : 'arail-logo-exact-v9.png')
+            }, row.qty || 1);
+            added += 1;
+          });
+        }
+
+        if (added) {
+          var code = btn.getAttribute('data-stack-coupon') || '';
+          if (code) { setCoupon(code); syncCouponFields(); }
+          btn.textContent = 'Added to cart ✓';
+        } else {
+          btn.textContent = 'Could not add — try again';
+        }
+        setTimeout(function () {
+          btn.disabled = false;
+          btn.textContent = original;
+        }, 1800);
+      });
+    });
+  }
+
   /* ---------- cart page ---------- */
   /* Markup mirrors the reference cart design: a bordered item list, then the
      coupon box, the total and the checkout button, all bottom-aligned. */
@@ -442,6 +572,7 @@
         + couponFormHtml('coupon-checkout', 'checkout', getCoupon());
       syncCouponFields();
       applyMin(subtotal);
+      syncCoinPanel();
     }
 
     /* Add-to-cart for the upsell strip. addItem() fires cart:updated, which
@@ -458,6 +589,26 @@
       btn.disabled = true;
     }
 
+    /** Reveals the wallet address for the selected payment option. */
+    function syncCoinPanel() {
+      var panel = form.querySelector('[data-payment-coin]');
+      if (!panel) return;
+      var radio = form.querySelector('.checkout-payment__radio:checked');
+      var address = radio ? String(radio.getAttribute('data-coin-address') || '') : '';
+      if (!radio || address === '') { panel.hidden = true; return; }
+      panel.hidden = false;
+      var image = panel.querySelector('[data-coin-image]');
+      if (image) { image.src = radio.getAttribute('data-coin-mark') || ''; }
+      setText(panel, '[data-coin-symbol-label]', radio.getAttribute('data-coin-symbol') || '');
+      setText(panel, '[data-coin-network-label]', radio.getAttribute('data-coin-network') || '');
+      setText(panel, '[data-coin-symbol-note]', radio.getAttribute('data-coin-symbol') || '');
+      var code = panel.querySelector('[data-coin-address-label]');
+      if (code) {
+        code.textContent = address;
+        code.setAttribute('data-copy-value', address);
+      }
+    }
+
     form.addEventListener('change', function (ev) {
       var radio = ev.target.closest ? ev.target.closest('.checkout-payment__radio') : null;
       if (!radio) return;
@@ -465,6 +616,7 @@
         var input = card.querySelector('.checkout-payment__radio');
         card.classList.toggle('is-selected', !!input && input.checked);
       });
+      syncCoinPanel();
     });
 
     form.addEventListener('click', function (ev) {
@@ -513,7 +665,7 @@
           postal_code: String(data.get('postal_code') || '').trim(),
           country: String(data.get('country') || '').trim()
         },
-        payment_method: String(data.get('payment') || 'btcpaygf_default'),
+        payment_method: String(data.get('payment') || 'bitcoin'),
         coupon: getCoupon(),
         items: getCart().map(function (i) { return { slug: i.slug, qty: i.qty }; })
       };
@@ -593,6 +745,8 @@
     refreshWishButtons();
     bindAddButtons();
     bindWishButtons();
+    bindStackButtons();
+    bindCopyButtons();
     bindCouponFields();
     renderCartPage();
     renderCheckout();

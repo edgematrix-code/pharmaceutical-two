@@ -9,18 +9,9 @@ require_once __DIR__ . '/includes/bootstrap.php';
  * assets/js/cart.js, which reads the [data-*] hooks below.
  */
 
-/* Payment cards. Labels live in payment_methods(); these are the extras the
-   card needs (provider mark + one-line description). */
-$providers = [
-    'btcpaygf_default' => [
-        'mark' => 'img/btcpay-mark.svg',
-        'desc' => 'Pay with Bitcoin or Lightning.',
-    ],
-    'cryptapi' => [
-        'mark' => 'img/cryptapi-mark.svg',
-        'desc' => 'USDT, ETH, SOL, LTC, and other coins via CryptAPI.',
-    ],
-];
+/* Payment options: the crypto wallets the store accepts. Addresses come from
+   crypto_payment_methods() (see includes/helpers.php + config). */
+$providers = crypto_payment_methods();
 
 /* Upsell strip: the pairings the reference shows, resolved against the live
    catalogue so prices and images are always real. */
@@ -242,17 +233,25 @@ require __DIR__ . '/includes/layout/head.php';
 
           <div class="checkout-payment surface-card">
             <h2 class="checkout-section__title">Payment</h2>
-            <ul class="checkout-payment__methods">
+            <p class="checkout-payment__intro">Choose how you want to pay. Crypto goes straight to our wallet — no third-party processor in between.</p>
+            <ul class="checkout-payment__methods" role="radiogroup" aria-label="Payment method">
               <?php $first = true; ?>
               <?php foreach ($providers as $value => $provider): ?>
                 <li>
                   <label class="checkout-payment__card<?= $first ? ' is-selected' : '' ?>">
-                    <input class="checkout-payment__radio" type="radio" value="<?= e($value) ?>" name="payment"<?= $first ? ' checked' : '' ?>>
+                    <input class="checkout-payment__radio" type="radio" value="<?= e($value) ?>" name="payment"
+                           data-payment-option
+                           data-coin-name="<?= e($provider['label']) ?>"
+                           data-coin-symbol="<?= e($provider['symbol']) ?>"
+                           data-coin-network="<?= e($provider['network']) ?>"
+                           data-coin-address="<?= e($provider['address']) ?>"
+                           data-coin-mark="<?= e(asset($provider['mark'])) ?>"
+                           <?= $first ? ' checked' : '' ?>>
                     <span class="checkout-payment__brand" aria-hidden="true">
                       <img alt="" class="checkout-payment__mark" src="<?= e(asset($provider['mark'])) ?>">
                     </span>
                     <span class="checkout-payment__card-body">
-                      <span class="checkout-payment__card-title"><?= e(payment_method_label($value)) ?></span>
+                      <span class="checkout-payment__card-title"><?= e($provider['label']) ?><span class="checkout-payment__card-symbol"><?= e($provider['symbol']) ?></span></span>
                       <span class="checkout-payment__card-desc"><?= e($provider['desc']) ?></span>
                     </span>
                     <span class="checkout-payment__indicator" aria-hidden="true"></span>
@@ -261,6 +260,22 @@ require __DIR__ . '/includes/layout/head.php';
                 <?php $first = false; ?>
               <?php endforeach; ?>
             </ul>
+            <div class="checkout-payment__coin" data-payment-coin data-copy-scope hidden>
+              <div class="checkout-payment__coin-head">
+                <span class="checkout-payment__coin-badge" aria-hidden="true">
+                  <img alt="" class="checkout-payment__mark" data-coin-image src="">
+                </span>
+                <span class="checkout-payment__coin-meta">
+                  <span class="checkout-payment__coin-title">Send <strong data-coin-symbol-label></strong> to this wallet</span>
+                  <span class="checkout-payment__coin-network" data-coin-network-label></span>
+                </span>
+              </div>
+              <div class="checkout-payment__address-row">
+                <code class="checkout-payment__address" data-coin-address-label data-copy-value></code>
+                <button type="button" class="checkout-payment__copy" data-copy-address>Copy address</button>
+              </div>
+              <p class="checkout-payment__coin-note">Send only <strong data-coin-symbol-note></strong> on the stated network. Your order is marked paid once the transfer confirms.</p>
+            </div>
             <p class="checkout-min-note" data-checkout-min role="status" hidden></p>
             <p class="checkout-error" data-checkout-status role="status"></p>
             <button type="submit" class="checkout-submit btn-primary">Place order</button>
@@ -291,7 +306,7 @@ require __DIR__ . '/includes/layout/head.php';
                 <span class="side-cart-trust-icon" aria-hidden="true">
                   <img src="<?= e(asset('img/bitcoin-logo.svg')) ?>" alt="" width="20" height="20" aria-hidden="true" class="shrink-0" style="width:20px;height:20px;display:block">
                 </span>
-                <span class="side-cart-trust-label">Bitcoin accepted</span>
+                <span class="side-cart-trust-label">BTC &amp; ETH accepted</span>
               </li>
             </ul>
           </div>
