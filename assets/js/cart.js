@@ -321,6 +321,47 @@
     });
   }
 
+  /* ---------- payment page: mark payment completed ---------- */
+  /* The customer confirms they have paid: the order is marked paid server-side
+     and the "view order details" button is revealed. */
+  function bindPaymentComplete() {
+    var btn = document.querySelector('[data-payment-complete]');
+    if (!btn) return;
+    var endpoint = (window.ARAIL_BASE || '/') + 'api/payment.php';
+
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      var status = document.querySelector('[data-payment-status]');
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_number: btn.getAttribute('data-order') || '' })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (res && res.ok) {
+            btn.hidden = true;
+            var details = document.querySelector('[data-payment-details]');
+            if (details) { details.hidden = false; }
+            if (status) { status.textContent = res.message || 'Payment marked as completed. Thank you.'; }
+            return;
+          }
+          btn.disabled = false;
+          btn.textContent = original;
+          if (status) { status.textContent = (res && res.error) || 'Could not update your payment status. Please contact us.'; }
+        })
+        .catch(function () {
+          btn.disabled = false;
+          btn.textContent = original;
+          if (status) { status.textContent = 'Network error — please try again.'; }
+        });
+    });
+  }
+
   /* ---------- stack bundles ---------- */
   /* "Add stack to cart" buttons carry their bundle as JSON (slug + qty). The
      product details are resolved from the live catalogue so the cart always
@@ -383,8 +424,6 @@
         }
 
         if (added) {
-          var code = btn.getAttribute('data-stack-coupon') || '';
-          if (code) { setCoupon(code); syncCouponFields(); }
           btn.textContent = 'Added to cart ✓';
         } else {
           btn.textContent = 'Could not add — try again';
@@ -719,6 +758,7 @@
     bindWishButtons();
     bindStackButtons();
     bindCopyButtons();
+    bindPaymentComplete();
     bindCouponFields();
     renderCartPage();
     renderCheckout();

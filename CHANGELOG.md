@@ -1133,8 +1133,17 @@ sibling app returns for its own `.htaccess`.
   `APP_EMAIL` of `support@example.com` / `support@email.com` is treated as unset
   and `lemon@arailpharma.si` is used instead, so a stale environment value can
   never show the demo address to customers.
-- The payment-page call to action now reads **“I have completed payment (view
-  order details)”** and links to the order confirmation.
+- Payment page: **“I have completed payment”** and **“View order details”** are
+  now separate controls. The details button starts hidden; clicking **I have
+  completed payment** POSTs to `api/payment.php`, which sets the order's
+  `payment_status` to `paid`, then reveals **View order details** (linking to the
+  confirmation) and shows a confirmation message. An order that is already paid
+  renders the details button immediately.
+- Adding a stack to the cart no longer auto-fills the coupon input with
+  `stack12` / `stack15`; the coupon box stays empty until the customer enters a
+  code. The stack copy now says to add the code at checkout. Verified in a
+  headless browser: after "Add stack to cart" the cart coupon field renders
+  `value=""` with no `stack12` present.
 
 ---
 

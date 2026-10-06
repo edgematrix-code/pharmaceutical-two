@@ -15,6 +15,7 @@ require_once __DIR__ . '/includes/bootstrap.php';
 $number = trim((string)($_GET['number'] ?? $_GET['order'] ?? ''));
 $order  = null;
 $wallet = null;
+$paid   = false;
 
 if ($number !== '' && preg_match('/^[A-Z]{2,4}-[0-9]{8}-[A-Z0-9]{4,8}$/i', $number)) {
     $stmt = db()->prepare('SELECT * FROM orders WHERE order_number = ? LIMIT 1');
@@ -22,6 +23,7 @@ if ($number !== '' && preg_match('/^[A-Z]{2,4}-[0-9]{8}-[A-Z0-9]{4,8}$/i', $numb
     $order = $stmt->fetch() ?: null;
     if ($order) {
         $wallet = crypto_payment_methods()[(string)$order['payment_method']] ?? null;
+        $paid   = strtolower((string)$order['payment_status']) === 'paid';
     }
 }
 
@@ -77,9 +79,13 @@ require __DIR__ . '/includes/layout/head.php';
         <p class="crypto-page__warn">Send only <?= e($wallet['symbol']) ?> on the <?= e($wallet['network']) ?> to this address. Coins sent on another network cannot be recovered.</p>
 
         <div class="crypto-page__actions">
-          <a class="btn-primary !min-h-12 !px-6 !text-sm crypto-page__cta" href="<?= e(url_path('order/' . $order['order_number'] . '/')) ?>">I have completed payment <span class="crypto-page__cta-sub">(view order details)</span></a>
+          <?php if (!$paid): ?>
+            <button type="button" class="btn-primary crypto-page__cta !min-h-12 !px-6 !text-sm" data-payment-complete data-order="<?= e((string)$order['order_number']) ?>">I have completed payment</button>
+          <?php endif; ?>
+          <a class="btn-primary crypto-page__cta !min-h-12 !px-6 !text-sm" data-payment-details href="<?= e(url_path('order/' . $order['order_number'] . '/')) ?>"<?= $paid ? '' : ' hidden' ?>>View order details</a>
           <a class="btn-secondary !min-h-12 !px-6 !text-sm" href="<?= e(url_path('contact/')) ?>">Need help?</a>
         </div>
+        <p class="crypto-page__status" data-payment-status role="status"><?= $paid ? 'Payment marked as completed. Thank you — we will confirm it shortly.' : '' ?></p>
       </section>
     <?php elseif ($order): ?>
       <section class="crypto-page__card crypto-page__card--narrow">

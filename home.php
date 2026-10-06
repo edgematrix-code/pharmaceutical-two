@@ -102,7 +102,7 @@ require __DIR__ . '/includes/layout/head.php';
               <div class="stack-bundles-cta__copy">
                 <p class="stack-bundles-cta__eyebrow">Protocol stacks</p>
                 <h2 class="stack-bundles-cta__title">Save 12–15% on curated kits</h2>
-                <p class="stack-bundles-cta__desc">Peptide kits at 12% off · 12-week cycle stacks at 15% off — discount applied at cart.</p>
+                <p class="stack-bundles-cta__desc">Peptide kits at 12% off · 12-week cycle stacks at 15% off — add the code at checkout.</p>
               </div>
               <a class="btn-primary stack-bundles-cta__btn" href="/stacks/">View stacks</a>
             </section>
