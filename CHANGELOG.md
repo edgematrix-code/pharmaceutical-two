@@ -1139,6 +1139,13 @@ sibling app returns for its own `.htaccess`.
   `payment_status` to `paid`, then reveals **View order details** (linking to the
   confirmation) and shows a confirmation message. An order that is already paid
   renders the details button immediately.
+- Order confirmation (`/order/<number>/`) now reflects the payment state. It
+  reads `orders.payment_status`: the summary line reads `Payment: Completed`
+  (green) instead of `Status: pending`, the intro thanks the customer for their
+  payment, and the “Payment required — Bitcoin / Open payment page” card is
+  replaced by a green “Payment completed — thank you” panel that links to the
+  payment page only as **View payment details**. Verified in a headless browser
+  on both a paid and an unpaid order; the old card and CTA are gone when paid.
 - Adding a stack to the cart no longer auto-fills the coupon input with
   `stack12` / `stack15`; the coupon box stays empty until the customer enters a
   code. The stack copy now says to add the code at checkout. Verified in a

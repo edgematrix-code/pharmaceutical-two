@@ -21,8 +21,10 @@ if ($number !== '' && preg_match('/^[A-Z]{2,4}-[0-9]{8}-[A-Z0-9]{4,8}$/i', $numb
 /* When the customer chose a crypto wallet, surface the address and amount on
    the confirmation so the payment instructions are immediate, not email-only. */
 $crypto_wallet = null;
+$paid = false;
 if ($order) {
     $crypto_wallet = crypto_payment_methods()[(string)$order['payment_method']] ?? null;
+    $paid = strtolower((string)$order['payment_status']) === 'paid';
 }
 
 seo_set([
@@ -43,7 +45,7 @@ require __DIR__ . '/includes/layout/head.php';
       <header class="space-y-3">
         <p class="text-sm font-semibold uppercase tracking-[0.08em] text-[var(--accent)]">Thank you</p>
         <h1 class="text-[clamp(2rem,4.5vw,3rem)] font-bold tracking-[-0.01em] text-[var(--ink)]">Order <?= e((string)$order['order_number']) ?></h1>
-        <p class="text-base text-[var(--muted-2)]"><?php if ($crypto_wallet): ?>We have received your order. Open the payment page to send the crypto payment and complete it — we will confirm to <?= e((string)$order['customer_email']) ?>.<?php else: ?>We have received your order and will email payment instructions to <?= e((string)$order['customer_email']) ?> shortly.<?php endif; ?></p>
+        <p class="text-base text-[var(--muted-2)]"><?php if ($paid): ?>Thank you — we have received your payment. We will confirm your order to <?= e((string)$order['customer_email']) ?> shortly.<?php elseif ($crypto_wallet): ?>We have received your order. Open the payment page to send the crypto payment and complete it — we will confirm to <?= e((string)$order['customer_email']) ?>.<?php else: ?>We have received your order and will email payment instructions to <?= e((string)$order['customer_email']) ?> shortly.<?php endif; ?></p>
       </header>
 
       <section class="surface-card space-y-3 px-6 py-8">
@@ -61,13 +63,28 @@ require __DIR__ . '/includes/layout/head.php';
           <p class="flex justify-between"><span class="text-[var(--muted)]">Shipping</span><span><?= e(format_money((float)$order['shipping'])) ?></span></p>
           <p class="flex justify-between text-lg font-bold text-[var(--ink)]"><span>Total</span><span><?= e(format_money((float)$order['total'])) ?></span></p>
         </div>
-        <p class="text-sm text-[var(--muted)]">Payment method: <?= e(payment_method_label((string)$order['payment_method'])) ?> · Status: <?= e((string)$order['status']) ?></p>
+        <p class="text-sm text-[var(--muted)]">Payment method: <?= e(payment_method_label((string)$order['payment_method'])) ?> · Payment: <strong<?= $paid ? ' class="payment-state--paid"' : '' ?>><?= $paid ? 'Completed' : 'Awaiting payment' ?></strong> · Order status: <?= e((string)$order['status']) ?></p>
         <?php if (!empty($order['shipping_address'])): ?>
           <p class="text-sm text-[var(--muted)]">Shipping to: <?= nl2br(e((string)$order['shipping_address'])) ?></p>
         <?php endif; ?>
       </section>
 
-      <?php if ($crypto_wallet): ?>
+      <?php if ($crypto_wallet && $paid): ?>
+        <section class="crypto-pay crypto-pay--paid surface-card" aria-label="Crypto payment completed">
+          <div class="crypto-pay__head">
+            <span class="crypto-pay__badge crypto-pay__badge--paid" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            <div>
+              <h2 class="crypto-pay__title">Payment completed &mdash; thank you</h2>
+              <p class="crypto-pay__sub">We have received your <?= e($crypto_wallet['label']) ?> payment for order <?= e((string)$order['order_number']) ?>. Keep your transaction ID in case we need it to match your payment.</p>
+            </div>
+          </div>
+          <div class="crypto-pay__actions">
+            <a class="btn-secondary !min-h-12 !px-6 !text-sm" href="<?= e(url_path('pay/' . $order['order_number'] . '/')) ?>">View payment details</a>
+          </div>
+        </section>
+      <?php elseif ($crypto_wallet): ?>
         <section class="crypto-pay surface-card" aria-label="Crypto payment">
           <div class="crypto-pay__head">
             <span class="crypto-pay__badge" aria-hidden="true">

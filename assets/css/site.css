@@ -674,6 +674,23 @@
   margin-top: 0.35rem;
 }
 
+/* Payment state in the order-confirmation summary line. */
+.payment-state--paid {
+  color: #2f8a5b;
+}
+
+/* Paid state of the order-confirmation payment panel. */
+.crypto-pay--paid {
+  border-color: #bfe4cd;
+  background: linear-gradient(180deg, #f2fbf5, #ffffff);
+}
+
+.crypto-pay__badge--paid {
+  background: #e6f7ed;
+  color: #2f8a5b;
+}
+
+
 @media (max-width: 480px) {
   .crypto-page__address-row {
     flex-direction: column;
