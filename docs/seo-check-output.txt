@@ -1,0 +1,46 @@
+Arail SEO check
+============================================================
+
+Database metadata
+  products checked ......... 50
+  thin descriptions ....... 48
+  missing images .......... 0
+  missing GTIN ............ 50
+
+Configuration
+  base_url ................ NOT SET (local fallback in use)
+
+Static checks
+  PHP files scanned ........ 73
+  stale domain references .. 0
+  required files present ... 16/16
+
+Live crawl of https://arail-pharamceuticals.test
+  (local host: TLS verification relaxed - PHP does not trust Herd's CA)
+  200 /                                                          h1:1 canon:y jsonld:2
+  200 /shop/                                                     h1:1 canon:y jsonld:3
+  200 /product/test-cyp-200/                                     h1:1 canon:y jsonld:3
+  200 /product/test-enanthate-300/                               h1:1 canon:y jsonld:3
+  200 /product/equipose-300/                                     h1:1 canon:y jsonld:3
+  200 /category/injectable-anabolics/                            h1:1 canon:y jsonld:3
+  200 /category/oral-anabolics/                                  h1:1 canon:y jsonld:3
+  200 /category/peptides-hgh/                                    h1:1 canon:y jsonld:3
+  200 /cart/                                                     h1:1 canon:y jsonld:0 noindex
+  200 /checkout/                                                 h1:1 canon:y jsonld:0 noindex
+  200 /account/                                                  h1:1 canon:y jsonld:0 noindex
+  200 /sitemap.xml                                               (non-HTML)
+  200 /robots.txt                                                (non-HTML)
+  404 /this-page-should-not-exist-9999/                          h1:1 canon:y jsonld:0 noindex
+  sitemap index entries .... 3
+  sitemap page urls checked  66
+  internal links checked ... 200
+  broken internal links .... 0
+
+Products needing attention
+  thin descriptions: test-cyp-200, test-enanthate-300, equipose-300, tren-acetate-100, sustanon-250, test-prop-100, bacteriostatic-water-10ml, mast-prop-100, retatrutide-10mg, hcg-10000iu, nandrolone-prop-100, arimidex-1, superdrol-40, tren-enanthate-200, nandrolone-deca-300, test-cyp-50mg-ml, l-carnitine-500mg-ml, test-cyp-gso, winstrol-25, glutathione-200mg-ml …
+  missing GTIN:      test-cyp-200, test-enanthate-300, equipose-300, tren-acetate-100, sustanon-250, test-prop-100, bacteriostatic-water-10ml, mast-prop-100, retatrutide-10mg, hcg-10000iu, nandrolone-prop-100, arimidex-1, superdrol-40, tren-enanthate-200, nandrolone-deca-300, test-cyp-50mg-ml, l-carnitine-500mg-ml, test-cyp-gso, winstrol-25, glutathione-200mg-ml …
+  missing images:    none
+
+WARN: app.base_url is empty - set it to your real domain before going live (canonical/sitemap/feed URLs currently follow the request host).
+
+Summary: 0 error(s), 1 warning(s)

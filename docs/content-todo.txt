@@ -1,0 +1,8 @@
+THIN (48):
+test-cyp-200, test-enanthate-300, equipose-300, tren-acetate-100, sustanon-250, test-prop-100, bacteriostatic-water-10ml, mast-prop-100, retatrutide-10mg, hcg-10000iu, nandrolone-prop-100, arimidex-1, superdrol-40, tren-enanthate-200, nandrolone-deca-300, test-cyp-50mg-ml, l-carnitine-500mg-ml, test-cyp-gso, winstrol-25, glutathione-200mg-ml, clenbuterol-250mcg, estradiol-cypionate-10mg-ml, helios, dbol-50mg-ml-no-super-solvents, cytomel-100mcg, tirzepatide, nolvadex-20, bpc-157-5mg, tne-100-no-super-solvents-in-mig840, mast-enanthate-200, dianabol-10, t4, clomid-50, mt2-10mg, proviron-25, superdrol-10, tb-500-5mg, retatrutide-60mg, klow-80mg, pt-141-10mg, tirzepatide-30mg, ghk-cu-50mg, glow-70mg, semaglutide-10mg, ipamorelin-10mg, arail-somatropin-100iu, semaglutide-5mg, arail-somatropin-240iu
+
+CAT injectable-anabolics: ok
+CAT oral-anabolics: ok
+CAT peptides-hgh: ok
+
+GTIN missing: all 50 products

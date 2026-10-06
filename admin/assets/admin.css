@@ -1,0 +1,175 @@
+/* Arail admin styles - mirrors the public site (Manrope + site design tokens).
+   The fonts below are the same Manrope woff2 files assets/css/site.css loads;
+   the token block is copied from assets/css/theme.css :root so the admin and
+   the storefront share one palette. This file is intentionally standalone: it
+   does NOT pull in theme.css/site.css, so nothing here can leak into the
+   storefront or reset the admin markup. */
+
+/* ---- Manrope (latin + latin-ext), weights 300-800 --------------------- */
+@font-face{font-family:Manrope;font-style:normal;font-weight:300;font-display:swap;src:url(../../assets/fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}
+@font-face{font-family:Manrope;font-style:normal;font-weight:300;font-display:swap;src:url(../../assets/fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}
+@font-face{font-family:Manrope;font-style:normal;font-weight:400;font-display:swap;src:url(../../assets/fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}
+@font-face{font-family:Manrope;font-style:normal;font-weight:400;font-display:swap;src:url(../../assets/fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}
+@font-face{font-family:Manrope;font-style:normal;font-weight:500;font-display:swap;src:url(../../assets/fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}
+@font-face{font-family:Manrope;font-style:normal;font-weight:500;font-display:swap;src:url(../../assets/fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}
+@font-face{font-family:Manrope;font-style:normal;font-weight:600;font-display:swap;src:url(../../assets/fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}
+@font-face{font-family:Manrope;font-style:normal;font-weight:600;font-display:swap;src:url(../../assets/fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}
+@font-face{font-family:Manrope;font-style:normal;font-weight:700;font-display:swap;src:url(../../assets/fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}
+@font-face{font-family:Manrope;font-style:normal;font-weight:700;font-display:swap;src:url(../../assets/fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}
+@font-face{font-family:Manrope;font-style:normal;font-weight:800;font-display:swap;src:url(../../assets/fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}
+@font-face{font-family:Manrope;font-style:normal;font-weight:800;font-display:swap;src:url(../../assets/fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}
+@font-face{font-family:"Manrope Fallback";src:local("Arial");ascent-override:103.31%;descent-override:29.07%;line-gap-override:0.00%;size-adjust:103.19%}
+
+/* ---- Design tokens (copied from the storefront's theme.css :root) ------ */
+:root{
+  --font-body:"Manrope","Manrope Fallback";
+  --background:#f5f8fa;--foreground:#2d2d2d;--ink:#2d2d2d;
+  --muted:#758087;--muted-2:#4f5a60;
+  --surface:#fff;--surface-soft:#f5f8fa;--surface-hover:#f0f9fd;
+  --line:#dedede;--line-strong:#cfd9de;
+  --accent:#47a9d4;--accent-hover:#3a97c0;--accent-dark:#2789b4;--accent-soft:#eaf6fb;
+  --success:#48a879;--badge:#54bf86;
+  --radius:20px;--radius-sm:12px;
+  --shadow:0 18px 58px #19303a13;--shadow-soft:0 8px 26px #19303a0e;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ok:var(--success);--bad:#b3261e;
+}
+*{box-sizing:border-box}
+body.admin{margin:0;font:15px/1.55 var(--font-body),system-ui,sans-serif;background:var(--background);color:var(--ink);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+/* Native controls do not inherit the page font unless told to - without this
+   every <button> renders in the UA default (Arial). */
+button,input,select,textarea{font:inherit;letter-spacing:inherit}
+h1,h2,h3,h4{letter-spacing:-.02em}
+a{color:var(--accent-dark);text-decoration:none}
+a:hover{color:var(--accent-hover);text-decoration:underline}
+
+/* ---- Shell ------------------------------------------------------------- */
+.layout{display:flex;min-height:100vh;align-items:flex-start}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--line);padding:1.15rem .85rem 1.5rem;display:flex;flex-direction:column;gap:.2rem;position:sticky;top:0;min-height:100vh}
+.content{flex:1;min-width:0;padding:1.6rem clamp(1rem,2.6vw,2.1rem) 3.5rem}
+
+/* ---- Brand / logo (same asset as the storefront header) ---------------- */
+.sidebar .brand{display:inline-flex;align-items:center;gap:.6rem;padding:.35rem .55rem 1.15rem;text-decoration:none;line-height:0}
+.sidebar .brand:hover{text-decoration:none;opacity:.85}
+.brand-logo__img{display:block;width:auto;height:2.6rem;max-width:100%;object-fit:contain}
+.brand-tag{display:block;padding:0 .85rem .9rem;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
+
+/* ---- Sidebar nav (mirrors the storefront's active/hover treatment) ----- */
+.sidebar a.nav{color:var(--ink);padding:.6rem .9rem;border-radius:999px;display:flex;justify-content:space-between;align-items:center;gap:.5rem;font-weight:500;font-size:.9rem;letter-spacing:-.01em;transition:background-color .22s var(--ease),color .22s var(--ease)}
+.sidebar a.nav:hover{background:var(--surface-soft);color:var(--accent-dark);text-decoration:none}
+.sidebar a.nav.active{background:var(--accent-soft);color:var(--accent-dark);font-weight:600}
+.sidebar a.logout{margin-top:1rem;color:var(--muted);padding:.6rem .9rem;border-radius:999px;font-size:.9rem;font-weight:500;border-top:1px solid var(--line);padding-top:1rem;border-radius:0}
+.sidebar a.logout:hover{color:var(--bad);text-decoration:none}
+
+/* ---- Topbar ------------------------------------------------------------ */
+.topbar{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;margin-bottom:1.4rem;flex-wrap:wrap}
+.topbar h1{margin:.1rem 0 0;font-size:clamp(1.45rem,2.6vw,1.85rem);font-weight:800;line-height:1.15}
+.topbar .eyebrow{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:var(--accent-dark);margin:0 0 .3rem}
+.user-chip{color:var(--muted);font-size:.82rem;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:.42rem .95rem;font-weight:500}
+.user-chip strong{color:var(--ink);font-weight:700}
+
+/* ---- Cards / stats ----------------------------------------------------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.15rem 1.25rem;box-shadow:var(--shadow-soft);min-width:0}
+.grid{display:grid;gap:1rem}
+.stats{grid-template-columns:repeat(auto-fit,minmax(158px,1fr));margin-bottom:1.3rem}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.05rem 1.15rem;box-shadow:var(--shadow-soft);transition:transform .28s var(--ease),box-shadow .28s var(--ease)}
+.stat:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat .n{font-size:1.75rem;font-weight:800;line-height:1.05;letter-spacing:-.03em}
+.stat .l{color:var(--muted);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;margin-top:.3rem}
+.stat a{font-size:.82rem;font-weight:600}
+
+/* ---- Tables ------------------------------------------------------------ */
+/* Scroll container: a table's min-content width is the sum of its unbreakable
+   cells, which otherwise stretches the whole page on narrow screens. */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-soft)}
+.table-scroll>table.tbl{border:0;border-radius:0;box-shadow:none;min-width:600px}
+table.tbl{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-soft)}
+.tbl th,.tbl td{padding:.68rem .8rem;border-bottom:1px solid var(--line);text-align:left;font-size:.88rem;vertical-align:middle}
+.tbl th{background:var(--surface-soft);font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);white-space:nowrap}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr:hover td{background:var(--surface-hover)}
+.tbl td strong{font-weight:700}
+.thumb{width:46px;height:46px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--line);background:#fff;display:block}
+.thumb-empty{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.68rem}
+
+/* ---- Buttons (storefront language: uppercase, 800, 12px radius) -------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:.55rem .95rem;border-radius:var(--radius-sm);font-weight:800;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;line-height:1.2;min-height:40px;transition:background-color .28s var(--ease),border-color .28s var(--ease),color .28s var(--ease)}
+.btn:hover{border-color:var(--accent);color:var(--accent-dark);background:var(--accent-soft);text-decoration:none}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);color:#fff}
+.btn-danger{color:var(--bad);border-color:#eccdcb}
+.btn-danger:hover{background:#fdf1f0;border-color:var(--bad);color:var(--bad)}
+.btn-sm{padding:.3rem .6rem;font-size:.7rem;border-radius:10px;min-height:30px;letter-spacing:.03em}
+form.inline{display:inline}
+
+/* ---- Toolbar / forms --------------------------------------------------- */
+.toolbar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1.1rem}
+.toolbar form{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+label.fld{display:block;margin-bottom:.9rem}
+label.fld>span{display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;color:var(--muted)}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=url],input[type=file],select,textarea{width:100%;padding:.62rem .8rem;border:1px solid var(--line);border-radius:var(--radius-sm);font:inherit;background:var(--surface);color:inherit;min-height:44px;transition:border-color .22s var(--ease),box-shadow .22s var(--ease)}
+input:hover,select:hover,textarea:hover{border-color:var(--line-strong)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+textarea{min-height:128px;resize:vertical}
+input[type=file]{padding:.5rem .7rem}
+.chk{display:inline-flex;align-items:center;gap:.5rem;margin-right:1rem;font-weight:600;font-size:.88rem}
+.chk input{width:auto;min-height:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}
+.row2-3{display:grid;grid-template-columns:2fr 1fr;gap:0 1.4rem;align-items:start}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 1rem}
+/* Grid items default to min-width:auto, so a wide table inside a card would widen
+   its own track instead of scrolling. Let the items shrink. */
+.row2>*,.row2-3>*,.row3>*{min-width:0}
+
+/* ---- Flash messages ---------------------------------------------------- */
+.flash{padding:.8rem 1rem;border-radius:var(--radius-sm);margin-bottom:1rem;border:1px solid;font-size:.88rem;font-weight:600}
+.flash.success{background:#eefaf1;border-color:#bfe6cb;color:var(--success)}
+.flash.error{background:#fdf1f0;border-color:#eccdcb;color:var(--bad)}
+.flash.info{background:var(--accent-soft);border-color:#bfe0ee;color:var(--accent-dark)}
+
+/* ---- Badges ------------------------------------------------------------ */
+.badge{display:inline-block;padding:.2rem .58rem;border-radius:999px;font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+.badge.pending{background:#fff4e0;color:#9a6a12}
+.badge.confirmed,.badge.processing{background:var(--accent-soft);color:var(--accent-dark)}
+.badge.shipped{background:#ece7fb;color:#553c9a}
+.badge.delivered,.badge.paid,.badge.approved,.badge.subscribed,.badge.active{background:#e9f8ee;color:var(--success)}
+.badge.cancelled,.badge.unpaid,.badge.rejected,.badge.unsubscribed,.badge.inactive{background:#fdf1f0;color:var(--bad)}
+.badge.refunded{background:#eef2f4;color:var(--muted-2)}
+
+/* ---- Pager / utility --------------------------------------------------- */
+.pager{display:flex;gap:.4rem;margin-top:1.1rem;flex-wrap:wrap}
+.pager a,.pager span{padding:.4rem .7rem;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:.85rem;font-weight:600;transition:background-color .22s var(--ease),border-color .22s var(--ease)}
+.pager a:hover{border-color:var(--accent);color:var(--accent-dark);background:var(--accent-soft);text-decoration:none}
+.pager .current{background:var(--accent);border-color:var(--accent);color:#fff}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.mt1{margin-top:1rem}.mt2{margin-top:2rem}
+.empty{padding:1.8rem;text-align:center;color:var(--muted);font-size:.9rem}
+.stars{color:#e8a33d;letter-spacing:2px;white-space:nowrap}
+pre.body{white-space:pre-wrap;font:inherit;margin:0}
+.review-item{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:1.1rem;margin-bottom:.9rem;box-shadow:var(--shadow-soft)}
+.msg-row.unread td{font-weight:600;background:var(--accent-soft)}
+
+/* ---- Login (storefront card look) -------------------------------------- */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:linear-gradient(180deg,var(--surface) 0%,var(--background) 55%)}
+.login-card{width:100%;max-width:410px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:2rem 1.9rem;box-shadow:var(--shadow)}
+.login-card .brand{display:flex;justify-content:center;padding:0 0 1.35rem;line-height:0}
+.login-card .brand-logo__img{height:3rem}
+.login-card h1{margin:0 0 1.15rem;font-size:1.2rem;font-weight:800;text-align:center}
+.login-card .btn{width:100%;min-height:48px;font-size:.85rem}
+.login-card .btn-primary:hover{transform:translateY(-1px)}
+.login-note{margin:1rem 0 0;font-size:.78rem;color:var(--muted);text-align:center}
+
+/* ---- Responsive -------------------------------------------------------- */
+@media(max-width:900px){
+  /* stretch, not flex-start: a shrink-to-fit .content would otherwise take its
+     width from the tables' min-content and push the page wider than the screen */
+  .layout{flex-direction:column;align-items:stretch}
+  .sidebar{width:100%;min-height:0;position:static;flex-direction:row;flex-wrap:wrap;align-items:center;border-right:0;border-bottom:1px solid var(--line);padding:.85rem 1rem}
+  .sidebar .brand{padding:.2rem .4rem .2rem 0}
+  .brand-logo__img{height:2.2rem}
+  .brand-tag{display:none}
+  .sidebar a.logout{margin:0 0 0 auto;border-top:0;padding-top:.6rem}
+  .content{padding:1.1rem 1rem 3rem}
+  .row2,.row2-3,.row3{grid-template-columns:1fr}
+}

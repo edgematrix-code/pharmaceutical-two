@@ -1,0 +1,166 @@
+@font-face{font-family:Manrope;font-style:normal;font-weight:300;font-display:swap;src:url(../fonts/438aa629764e75f3-s.woff2) format("woff2");unicode-range:u+0460-052f,u+1c80-1c8a,u+20b4,u+2de0-2dff,u+a640-a69f,u+fe2e-fe2f}@font-face{font-family:Manrope;font-style:normal;font-weight:300;font-display:swap;src:url(../fonts/875ae681bfde4580-s.woff2) format("woff2");unicode-range:u+0301,u+0400-045f,u+0490-0491,u+04b0-04b1,u+2116}@font-face{font-family:Manrope;font-style:normal;font-weight:300;font-display:swap;src:url(../fonts/51251f8b9793cdb3-s.woff2) format("woff2");unicode-range:u+0370-0377,u+037a-037f,u+0384-038a,u+038c,u+038e-03a1,u+03a3-03ff}@font-face{font-family:Manrope;font-style:normal;font-weight:300;font-display:swap;src:url(../fonts/e857b654a2caa584-s.woff2) format("woff2");unicode-range:u+0102-0103,u+0110-0111,u+0128-0129,u+0168-0169,u+01a0-01a1,u+01af-01b0,u+0300-0301,u+0303-0304,u+0308-0309,u+0323,u+0329,u+1ea0-1ef9,u+20ab}@font-face{font-family:Manrope;font-style:normal;font-weight:300;font-display:swap;src:url(../fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e00-1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}@font-face{font-family:Manrope;font-style:normal;font-weight:300;font-display:swap;src:url(../fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}@font-face{font-family:Manrope;font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/438aa629764e75f3-s.woff2) format("woff2");unicode-range:u+0460-052f,u+1c80-1c8a,u+20b4,u+2de0-2dff,u+a640-a69f,u+fe2e-fe2f}@font-face{font-family:Manrope;font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/875ae681bfde4580-s.woff2) format("woff2");unicode-range:u+0301,u+0400-045f,u+0490-0491,u+04b0-04b1,u+2116}@font-face{font-family:Manrope;font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/51251f8b9793cdb3-s.woff2) format("woff2");unicode-range:u+0370-0377,u+037a-037f,u+0384-038a,u+038c,u+038e-03a1,u+03a3-03ff}@font-face{font-family:Manrope;font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/e857b654a2caa584-s.woff2) format("woff2");unicode-range:u+0102-0103,u+0110-0111,u+0128-0129,u+0168-0169,u+01a0-01a1,u+01af-01b0,u+0300-0301,u+0303-0304,u+0308-0309,u+0323,u+0329,u+1ea0-1ef9,u+20ab}@font-face{font-family:Manrope;font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e00-1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}@font-face{font-family:Manrope;font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}@font-face{font-family:Manrope;font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/438aa629764e75f3-s.woff2) format("woff2");unicode-range:u+0460-052f,u+1c80-1c8a,u+20b4,u+2de0-2dff,u+a640-a69f,u+fe2e-fe2f}@font-face{font-family:Manrope;font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/875ae681bfde4580-s.woff2) format("woff2");unicode-range:u+0301,u+0400-045f,u+0490-0491,u+04b0-04b1,u+2116}@font-face{font-family:Manrope;font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/51251f8b9793cdb3-s.woff2) format("woff2");unicode-range:u+0370-0377,u+037a-037f,u+0384-038a,u+038c,u+038e-03a1,u+03a3-03ff}@font-face{font-family:Manrope;font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/e857b654a2caa584-s.woff2) format("woff2");unicode-range:u+0102-0103,u+0110-0111,u+0128-0129,u+0168-0169,u+01a0-01a1,u+01af-01b0,u+0300-0301,u+0303-0304,u+0308-0309,u+0323,u+0329,u+1ea0-1ef9,u+20ab}@font-face{font-family:Manrope;font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e00-1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}@font-face{font-family:Manrope;font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}@font-face{font-family:Manrope;font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/438aa629764e75f3-s.woff2) format("woff2");unicode-range:u+0460-052f,u+1c80-1c8a,u+20b4,u+2de0-2dff,u+a640-a69f,u+fe2e-fe2f}@font-face{font-family:Manrope;font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/875ae681bfde4580-s.woff2) format("woff2");unicode-range:u+0301,u+0400-045f,u+0490-0491,u+04b0-04b1,u+2116}@font-face{font-family:Manrope;font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/51251f8b9793cdb3-s.woff2) format("woff2");unicode-range:u+0370-0377,u+037a-037f,u+0384-038a,u+038c,u+038e-03a1,u+03a3-03ff}@font-face{font-family:Manrope;font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/e857b654a2caa584-s.woff2) format("woff2");unicode-range:u+0102-0103,u+0110-0111,u+0128-0129,u+0168-0169,u+01a0-01a1,u+01af-01b0,u+0300-0301,u+0303-0304,u+0308-0309,u+0323,u+0329,u+1ea0-1ef9,u+20ab}@font-face{font-family:Manrope;font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e00-1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}@font-face{font-family:Manrope;font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}@font-face{font-family:Manrope;font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/438aa629764e75f3-s.woff2) format("woff2");unicode-range:u+0460-052f,u+1c80-1c8a,u+20b4,u+2de0-2dff,u+a640-a69f,u+fe2e-fe2f}@font-face{font-family:Manrope;font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/875ae681bfde4580-s.woff2) format("woff2");unicode-range:u+0301,u+0400-045f,u+0490-0491,u+04b0-04b1,u+2116}@font-face{font-family:Manrope;font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/51251f8b9793cdb3-s.woff2) format("woff2");unicode-range:u+0370-0377,u+037a-037f,u+0384-038a,u+038c,u+038e-03a1,u+03a3-03ff}@font-face{font-family:Manrope;font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/e857b654a2caa584-s.woff2) format("woff2");unicode-range:u+0102-0103,u+0110-0111,u+0128-0129,u+0168-0169,u+01a0-01a1,u+01af-01b0,u+0300-0301,u+0303-0304,u+0308-0309,u+0323,u+0329,u+1ea0-1ef9,u+20ab}@font-face{font-family:Manrope;font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e00-1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}@font-face{font-family:Manrope;font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}@font-face{font-family:Manrope;font-style:normal;font-weight:800;font-display:swap;src:url(../fonts/438aa629764e75f3-s.woff2) format("woff2");unicode-range:u+0460-052f,u+1c80-1c8a,u+20b4,u+2de0-2dff,u+a640-a69f,u+fe2e-fe2f}@font-face{font-family:Manrope;font-style:normal;font-weight:800;font-display:swap;src:url(../fonts/875ae681bfde4580-s.woff2) format("woff2");unicode-range:u+0301,u+0400-045f,u+0490-0491,u+04b0-04b1,u+2116}@font-face{font-family:Manrope;font-style:normal;font-weight:800;font-display:swap;src:url(../fonts/51251f8b9793cdb3-s.woff2) format("woff2");unicode-range:u+0370-0377,u+037a-037f,u+0384-038a,u+038c,u+038e-03a1,u+03a3-03ff}@font-face{font-family:Manrope;font-style:normal;font-weight:800;font-display:swap;src:url(../fonts/e857b654a2caa584-s.woff2) format("woff2");unicode-range:u+0102-0103,u+0110-0111,u+0128-0129,u+0168-0169,u+01a0-01a1,u+01af-01b0,u+0300-0301,u+0303-0304,u+0308-0309,u+0323,u+0329,u+1ea0-1ef9,u+20ab}@font-face{font-family:Manrope;font-style:normal;font-weight:800;font-display:swap;src:url(../fonts/cc978ac5ee68c2b6-s.woff2) format("woff2");unicode-range:u+0100-02ba,u+02bd-02c5,u+02c7-02cc,u+02ce-02d7,u+02dd-02ff,u+0304,u+0308,u+0329,u+1d00-1dbf,u+1e00-1e9f,u+1ef2-1eff,u+2020,u+20a0-20ab,u+20ad-20c0,u+2113,u+2c60-2c7f,u+a720-a7ff}@font-face{font-family:Manrope;font-style:normal;font-weight:800;font-display:swap;src:url(../fonts/4c9affa5bc8f420e-s.p.woff2) format("woff2");unicode-range:u+00??,u+0131,u+0152-0153,u+02bb-02bc,u+02c6,u+02da,u+02dc,u+0304,u+0308,u+0329,u+2000-206f,u+20ac,u+2122,u+2191,u+2193,u+2212,u+2215,u+feff,u+fffd}@font-face{font-family:Manrope Fallback;src:local("Arial");ascent-override:103.31%;descent-override:29.07%;line-gap-override:0.00%;size-adjust:103.19%}.__className_538739{font-family:Manrope,Manrope Fallback;font-style:normal}.__variable_538739{--font-body:"Manrope","Manrope Fallback"}
+
+/* --------------------------------------------------------------------------- *
+ * Footer layout
+ *
+ * The newsletter block used to overlap the footer link columns at every width
+ * from 1024px up. Cause: the row was a nested flex with justify-between, so the
+ * newsletter column (min-width:0) shrank while the link columns could not
+ * shrink below their min-content width and simply spilled on top of it.
+ *
+ * A grid with a reserved newsletter track removes the possibility of collision:
+ * the link side is minmax(0,1fr) and both it and its children are allowed to
+ * wrap, so the links can never reach into the newsletter column.
+ * --------------------------------------------------------------------------- */
+.footer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  min-width: 0;
+}
+
+.footer-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  min-width: 0;
+}
+
+.footer-link-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-width: 0;
+}
+
+.footer-link-group {
+  min-width: 0;
+}
+
+.footer-newsletter {
+  width: 100%;
+  min-width: 0;
+  max-width: 400px;
+}
+
+@media (min-width: 640px) {
+  .footer-main {
+    flex-flow: row wrap;
+    gap: 2.5rem 3.5rem;
+  }
+
+  .footer-link-groups {
+    flex: 1 1 auto;
+    flex-flow: row wrap;
+    gap: 2rem 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-layout {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    align-items: start;
+    gap: 2.5rem;
+  }
+
+  .footer-newsletter {
+    max-width: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  .footer-layout {
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+}
+
+/* --------------------------------------------------------------------------- *
+ * Utilities missing from the compiled theme.css
+ *
+ * theme.css is a pre-built Tailwind v4 artefact and there is no build step in
+ * this repo, so any utility that was not in the original build silently does
+ * nothing. The classes below are all *referenced by the templates* but absent
+ * from theme.css - most importantly `py-8`, which is why cards had horizontal
+ * padding but no vertical padding.
+ *
+ * These are written as attribute selectors ([class~="x"]) so that no selector
+ * escaping is involved; they sit in site.css, which loads after theme.css, and
+ * have the same specificity as a plain utility class.
+ *
+ * Verified with: node diag-classes2.mjs (see CHANGELOG "Post-audit fixes #5").
+ * --------------------------------------------------------------------------- */
+
+/* --- spacing scale (--spacing is defined in theme.css) --------------------- */
+[class~="p-0"]   { padding: 0; }
+[class~="py-5"]  { padding-block: calc(var(--spacing) * 5); }
+[class~="py-8"]  { padding-block: calc(var(--spacing) * 8); }
+[class~="pt-12"] { padding-top: calc(var(--spacing) * 12); }
+[class~="px-10"] { padding-inline: calc(var(--spacing) * 10); }
+[class~="pl-5"]  { padding-left: calc(var(--spacing) * 5); }
+[class~="mt-3"]  { margin-top: calc(var(--spacing) * 3); }
+
+[class~="!px-4"] { padding-inline: calc(var(--spacing) * 4) !important; }
+[class~="!px-6"] { padding-inline: calc(var(--spacing) * 6) !important; }
+[class~="!px-7"] { padding-inline: calc(var(--spacing) * 7) !important; }
+
+@media (min-width: 640px) {
+  [class~="sm:px-10"]         { padding-inline: calc(var(--spacing) * 10); }
+  [class~="sm:justify-between"] { justify-content: space-between; }
+}
+
+@media (min-width: 768px) {
+  [class~="md:grid-cols-2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  [class~="lg:col-span-2"] { grid-column: span 2 / span 2; }
+}
+
+/* --- typography ------------------------------------------------------------ */
+[class~="text-xl"]      { font-size: 1.25rem;  line-height: 1.4; }
+[class~="text-3xl"]     { font-size: 1.875rem; line-height: 1.2; }
+[class~="leading-tight"]{ line-height: 1.25; }
+[class~="text-right"]   { text-align: right; }
+[class~="underline"]    { text-decoration-line: underline; }
+
+/* --- box model ------------------------------------------------------------- */
+[class~="h-fit"]   { height: fit-content; }
+[class~="w-24"]    { width: calc(var(--spacing) * 24); }
+[class~="min-h-11"]{ min-height: calc(var(--spacing) * 11); }
+[class~="min-w-11"]{ min-width: calc(var(--spacing) * 11); }
+
+/* --- borders and lists ----------------------------------------------------- */
+[class~="border-dashed"] { border-style: dashed; }
+[class~="border-l-4"]    { border-left-style: solid; border-left-width: 4px; }
+[class~="list-disc"]     { list-style-type: disc; }
+[class~="opacity-60"]    { opacity: 0.6; }
+
+/* --------------------------------------------------------------------------- *
+ * Minimum order value (app.min_order, $300)
+ *
+ * Below the minimum the cart renders a disabled Checkout button and the
+ * checkout page disables its submit button; both show the same shortfall
+ * note. Colours reuse the theme's red tokens so the note matches the existing
+ * .checkout-error text (#b91c1c / red-700).
+ * --------------------------------------------------------------------------- */
+.cart-min-note,
+.checkout-min-note {
+  color: var(--color-red-700);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.cart-min-note {
+  margin: 0;
+  text-align: right;
+}
+
+.checkout-min-note {
+  margin: 0.75rem 0 0;
+}
+
+.cart-gate__button[disabled],
+.checkout-submit[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
