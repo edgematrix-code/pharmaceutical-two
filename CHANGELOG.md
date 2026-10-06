@@ -1123,6 +1123,19 @@ sibling app returns for its own `.htaccess`.
   coin. Automatic on-chain confirmation (BTCPay or another processor) is not part
   of this change.
 
+**Follow-up hardening**
+
+- The currency symbol is normalised in `includes/config.php`: wrapping quotes and
+  whitespace are stripped once, so a quoted `APP_CURRENCY` value (e.g. `"$"` set
+  through a hosting panel) can never render as `"$…"`. Verified by running every
+  storefront page with `APP_CURRENCY="$"` — zero quoted prices.
+- The old placeholder contact address is refused in `includes/config.php`: an
+  `APP_EMAIL` of `support@example.com` / `support@email.com` is treated as unset
+  and `lemon@arailpharma.si` is used instead, so a stale environment value can
+  never show the demo address to customers.
+- The payment-page call to action now reads **“I have completed payment (view
+  order details)”** and links to the order confirmation.
+
 ---
 
 ## Manual checklist for you

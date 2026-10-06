@@ -30,6 +30,23 @@
 require_once __DIR__ . '/env.php';
 arail_load_env();
 
+/* The currency symbol is sometimes supplied wrapped in quotes (for example
+   APP_CURRENCY="$" set through a hosting panel, where the quotes become part
+   of the value). Strip the wrapping quotes/spaces once here so no price on any
+   page - storefront, admin or the payment page - can render the quotes. */
+$arail_currency = trim((string)(env('APP_CURRENCY') ?: '$'), " \t\n\r\0\x0B\"'");
+if ($arail_currency === '') {
+    $arail_currency = '$';
+}
+
+/* The official contact address. A stale placeholder APP_EMAIL (an older
+   ".env", or a value set through a hosting panel) is treated as "not
+   configured" so the demo address can never be shown to customers. */
+$arail_email = trim((string)(env('APP_EMAIL') ?: ''));
+if ($arail_email === '' || in_array(strtolower($arail_email), ['support@example.com', 'support@email.com'], true)) {
+    $arail_email = 'lemon@arailpharma.si';
+}
+
 return [
     'db' => [
         'host'     => env('DB_HOST') ?: '127.0.0.1',
@@ -44,10 +61,10 @@ return [
     'app' => [
         'name'          => env('APP_NAME') ?: 'Arail Pharmaceuticals',
         'tagline'       => env('APP_TAGLINE') ?: 'Pure Anabolics. Zero compromises.',
-        'email'         => env('APP_EMAIL') ?: 'lemon@arailpharma.si',
+        'email'         => $arail_email,
         'phone'         => env('APP_PHONE') ?? '',
         'address'       => env('APP_ADDRESS') ?? '',
-        'currency'      => env('APP_CURRENCY') ?: '$',
+        'currency'      => $arail_currency,
         'currency_code' => env('APP_CURRENCY_CODE') ?: 'USD',
         'country_code'  => env('APP_COUNTRY_CODE') ?: 'US',
         // Crypto wallet addresses shown as the Bitcoin / Ethereum payment

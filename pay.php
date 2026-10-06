@@ -77,7 +77,7 @@ require __DIR__ . '/includes/layout/head.php';
         <p class="crypto-page__warn">Send only <?= e($wallet['symbol']) ?> on the <?= e($wallet['network']) ?> to this address. Coins sent on another network cannot be recovered.</p>
 
         <div class="crypto-page__actions">
-          <a class="btn-primary !min-h-12 !px-6 !text-sm" href="<?= e(url_path('order/' . $order['order_number'] . '/')) ?>">View order details</a>
+          <a class="btn-primary !min-h-12 !px-6 !text-sm crypto-page__cta" href="<?= e(url_path('order/' . $order['order_number'] . '/')) ?>">I have completed payment <span class="crypto-page__cta-sub">(view order details)</span></a>
           <a class="btn-secondary !min-h-12 !px-6 !text-sm" href="<?= e(url_path('contact/')) ?>">Need help?</a>
         </div>
       </section>

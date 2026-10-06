@@ -649,6 +649,12 @@
   justify-content: center;
 }
 
+.crypto-page__cta-sub {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
 .crypto-pay__actions {
   display: flex;
   flex-wrap: wrap;
